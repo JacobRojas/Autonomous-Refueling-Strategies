@@ -1,35 +1,48 @@
-function [success] = SGAS(gasDensity, hwLength, k, d)
+function [success] = SGAS(gasDensity, hwLength, k)
 % SGAS Generates a highway and selects the lowest priced gas station, out
 % of k stations, after passing a k/e stations.
 % returns 1 if the station selected is the lowest of k, returns 0 if the 
 % selected station is not the lowest.
 
 highway = zeros(1, hwLength);
-stationsToPass = ceil(k / exp(1));
 
-% Generating a highway, if not enough stations are generated (<k) then the
-% highway is rerandomized from scratch
-i = d;
-while 1
-    while i <= length(highway)
-        if ((1 + 99 * rand()) <= (100 * gasDensity))
-            highway(i) = round(2 + 2*rand(), 2);
-        end  
-        i = i + d;
-    end
-    
-    if length(highway(highway>0)) >= k
-        break
-    end
-    i = d;
+% Generating a highway by generating a gas station at each array location
+% with probability `gasDensity`
+i = 1;
+while i <= length(highway)
+    if ((1 + 99 * rand()) <= (100 * gasDensity))
+        highway(i) = round(2 + 2*rand(), 2);
+    end  
+    i = i + 1;
 end
+
+% TODO: Break function here
+
+%TESTING - we may not want there to be less than k gas stations
+if length(highway(highway>0)) < k
+    fprintf("Not k gas stations\n")
+end
+
+% Keep driving until the remaining distance to empty is less than avg
+% distance between gas stations times k
+startingPoint = 1;
+gasStations = 0;
+distance = 1;
+while (gasStations == 0 & distance < length(highway)/2) | ...
+      (length(highway) - distance > distance * k / gasStations & distance < length(highway))
+      if highway(distance) ~= 0
+          gasStations = gasStations + 1;
+      end
+      distance = distance + 1;
+end
+startingPoint = distance
+
 % Assuming Tau has been reached (the car is in search mode). Now stepping 
 % through generated highway, passing k/e stations then stopping
 % at the lowest priced (so far) gas station.
+stationsToPass = ceil(k / exp(1));  % The number of stations to observe before being ready to stop
 stationRates = double.empty();      % Vector of station rates the car has visited thus far
-allStations = highway(highway>0);   % Vector of all station rates along entire highway
-stationRatesTot = allStations(1:k); % Vector of first k station rates
-i1 = d;
+i1 = startingPoint;
 
 % Finding max val and index of a generated highway
 % highwayMin = min(stationRatesTot);
@@ -37,36 +50,50 @@ i1 = d;
 
 % Finding the stopping point along the highway based on CSP
 while i1 <= length(highway)
-    while length(stationRates) < stationsToPass(1)
-        if highway(i1) ~= 0
-            stationRates = [stationRates highway(i1)];
+    if highway(i1) ~= 0
+        stationRates = [stationRates highway(i1)];
+    
+        if length(stationRates) == k
+            stoppingPoint = i1;
+            break
         end
-        i1 = i1 + d;
+
+        if highway(i1) <= min(stationRates) & length(stationRates) < stationsToPass(1)
+            stoppingPoint = i1;
+            break
+        end
     end
     
-    if highway(i1) == stationRatesTot(k)
-        stoppingPoint = i1;
-        break
-    end
-    
-    if highway(i1) <= min(stationRates) & highway(i1) ~= 0
-        stoppingPoint = i1;
-        break
-    end
-    
-    i1 = i1 + d;
+    i1 = i1 + 1;
 end
+
+% You might have run out of gas
+if i1 > length(highway)
+    fprintf("Failure\n")
+    success = 0;
+    return
+end
+
+%Find the ground truth minimum station that could have been selected 
+laterHighway = highway(startingPoint:end);
+laterStations = laterHighway(laterHighway > 0);
+if length(laterStations) > k
+    availableStations = laterStations(1:k);
+else
+    availableStations = laterStations;
+end
+minRate = min(availableStations);
 
 % Returning whether or not the stopping point is the lowest priced
 % gas station among k stations.
 stoppingRate = highway(stoppingPoint);
-if stoppingRate == min(stationRatesTot)
-    disp("Success!")
+if stoppingRate == minRate
+    disp("Success")
     success = 1;
     return
 end
 
+fprintf("Failure\n")
 success = 0;
 
 end
-
