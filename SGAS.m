@@ -7,11 +7,10 @@ end
 
 % Keep driving until the remaining distance to empty is less than avg
 % distance between gas stations times k
-startingPoint = 1;
 gasStations = 0;
 distance = 1;
-while (gasStations == 0 & distance < length(highway)/2) | ...
-      (length(highway) - distance > distance * k / gasStations & distance < length(highway))
+while (gasStations == 0 && distance < length(highway)/2) || ...
+      (length(highway) - distance > distance * k / gasStations && distance < length(highway))
       if highway(distance) ~= 0
           gasStations = gasStations + 1;
       end
@@ -40,7 +39,7 @@ while i1 <= length(highway)
             break
         end
 
-        if highway(i1) <= min(stationRates) & length(stationRates) < stationsToPass(1)
+        if highway(i1) <= min(stationRates) && length(stationRates) > stationsToPass
             stoppingPoint = i1;
             break
         end
@@ -75,7 +74,7 @@ if stoppingRate == minRate
     return
 end
 
-fprintf("Failure: picked gas station with price %d instead of with price %d\n",stoppingRate, minRate)
+fprintf("Failure: picked gas station with price %d instead of with price %d\n", stoppingRate, minRate)
 success = 0;
 
 end
