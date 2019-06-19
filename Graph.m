@@ -1,16 +1,18 @@
 clear all
 close all
 
-kValues = [5 6 8]
+kValues = [4 9 16]
+%stoppingEq =  @(x) ceil(x/exp(1));
+stoppingEq =  @(x) ceil(sqrt(x));
 
 simNum = 1;
 successRatio(1:3,1:4,1:100) = 4;
 while simNum <= 100 
     for i = 1:4
         highway = construct(i/25, 1000);
-        successRatio(1,i, simNum) = SGAS(highway, kValues(1));
-        successRatio(2,i, simNum) = SGAS(highway, kValues(2));
-        successRatio(3,i, simNum) = SGAS(highway, kValues(3));
+        successRatio(1,i, simNum) = SGAS(highway, kValues(1), stoppingEq);
+        successRatio(2,i, simNum) = SGAS(highway, kValues(2), stoppingEq);
+        successRatio(3,i, simNum) = SGAS(highway, kValues(3), stoppingEq);
     end
     simNum = simNum + 1;
 end

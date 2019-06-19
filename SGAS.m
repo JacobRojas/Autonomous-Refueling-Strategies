@@ -1,4 +1,4 @@
-function [success] = SGAS(highway, k)
+function [success] = SGAS(highway, k, stoppingEq)
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k
@@ -22,7 +22,7 @@ startingPoint = distance
 % Assuming Tau has been reached (the car is in search mode). Now stepping 
 % through generated highway, passing k/e stations then stopping
 % at the lowest priced (so far) gas station.
-stationsToPass = ceil(k / exp(1));  % The number of stations to observe before being ready to stop
+stationsToPass = stoppingEq(k);  % The number of stations to observe before being ready to stop
 stationRates = double.empty();      % Vector of station rates the car has visited thus far
 i1 = startingPoint;
 
@@ -51,7 +51,7 @@ end
 
 % You might have run out of gas
 if i1 > length(highway)
-    fprintf("Failure\n")
+    fprintf("Failure: Ran out of gas\n")
     success = 0;
     return
 end
@@ -75,7 +75,7 @@ if stoppingRate == minRate
     return
 end
 
-fprintf("Failure\n")
+fprintf("Failure: picked gas station with price %d instead of with price %d\n",stoppingRate, minRate)
 success = 0;
 
 end
