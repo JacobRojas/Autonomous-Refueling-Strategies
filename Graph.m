@@ -2,8 +2,8 @@ clear all
 close all
 
 kValues = [4 9 16]
-%stoppingEq =  @(x) ceil(x/exp(1));
-stoppingEq =  @(x) ceil(sqrt(x));
+stoppingEq =  @(x) ceil(x/exp(1));
+%stoppingEq =  @(x) ceil(sqrt(x));
 
 simNum = 1;
 successRatio(1:3,1:4,1:100) = 4;
