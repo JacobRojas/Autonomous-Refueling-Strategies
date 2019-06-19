@@ -24,7 +24,10 @@ end
 
 for i = 1:3
     subplot(3, 1, i);
-    plot(1:4, results(i, :));
+    stem(1:4, results(i, :));
+    ylim([0 max(results(i, :))+0.1]);
+    xlim([0.5 4.5])
+    xticks(0:1:4);
     ylabel("Success reatio");
     xlabel("Density / 25 units");
     title(sprintf("k = %d", kValues(i)));
