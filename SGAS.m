@@ -17,9 +17,9 @@ while (gasStations == 0 & distance < length(highway)/2) | ...
       end
       distance = distance + 1;
 end
-startingPoint = distance
+startingPoint = distance;
 
-% Assuming Tau has been reached (the car is in search mode). Now stepping 
+% Tau has been reached (the car is in search mode). Now stepping 
 % through generated highway, passing k/e stations then stopping
 % at the lowest priced (so far) gas station.
 stationsToPass = stoppingEq(k);  % The number of stations to observe before being ready to stop
