@@ -9,10 +9,16 @@ end
 % distance between gas stations times k
 gasStations = 0;
 distance = 1;
+lastStation = 0;
+dev = 0;
 while (gasStations == 0 && distance < length(highway)/2) || ...
-      (length(highway) - distance > distance * k / gasStations && distance < length(highway))
+      (length(highway) - distance > ((distance / gasStations) + 3 * dev) * k && distance < length(highway))
+  %                                 distance * k / gasStations
+  %                                 ((distance / gasStations) + 3 * dev) * k
       if highway(distance) ~= 0
           gasStations = gasStations + 1;
+          dev = 0.75*dev + 0.25 * abs((distance / gasStations) - (distance - lastStation));
+          lastStation = distance;
       end
       distance = distance + 1;
 end
