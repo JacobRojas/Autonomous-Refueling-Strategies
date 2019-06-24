@@ -8,7 +8,7 @@ stoppingEq =  @(x) ceil(x/exp(1));
 %stoppingEq =  @(x) ceil(sqrt(x));
 
 results(1:length(kValues)) = 10;
-highway = reallife("RealLife.csv");
+highway = reallife("AUS_DAL.csv");
 %Use this line to start at different points
 %highway = highway(500:end);
 for k = 1:length(kValues)
