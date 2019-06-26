@@ -11,7 +11,7 @@ highway = zeros(1, hwLength);
 i = 1;
 while i <= length(highway)
     if ((1 + 99 * rand()) <= (100 * gasDensity))
-        highway(i) = round(2 + 2*rand(), 2);
+        highway(i) = round((2 + 2*rand()) * 100) / 100;
     end  
     i = i + 1;
 end

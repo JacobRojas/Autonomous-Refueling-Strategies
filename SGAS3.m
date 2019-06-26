@@ -26,7 +26,7 @@ startingPoint = distance;
 % through generated highway, passing k/e stations then stopping
 % at the lowest priced (so far) gas station.
 stationsToPass = stoppingEq(k);  % The number of stations to observe before being ready to stop
-stationRates = double.empty();      % Vector of station rates the car has visited thus far
+stationRates = [];      % Vector of station rates the car has visited thus far
 i1 = startingPoint;
 
 % Finding max val and index of a generated highway
