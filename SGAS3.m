@@ -12,10 +12,12 @@ distance = 1;
 lastStation = 0;
 dev = 0;
 while (gasStations == 0 && length(highway) > k * distance) || ...
-      (length(highway) - distance > ((distance / gasStations) + numDev * dev) * k && distance < length(highway))
+      (gasStations ~= 0 && length(highway) - distance > ((distance / gasStations) + numDev * dev) * k && distance < length(highway))
       if highway(distance) ~= 0
           gasStations = gasStations + 1;
-          dev = beta*dev + (1-beta) * abs((distance / gasStations) - (distance - lastStation));
+          if(gasStations > 0)
+            dev = beta*dev + (1-beta) * abs((distance / gasStations) - (distance - lastStation));
+          end
           lastStation = distance;
       end
       distance = distance + 1;
