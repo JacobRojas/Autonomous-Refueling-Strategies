@@ -1,4 +1,4 @@
-function [rate, start, stop] = SGAS3(highway, k, stoppingEq, numDev)
+function [rate, start, stop] = SGAS3(highway, k, stoppingEq, numDev, beta)
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k
@@ -15,7 +15,7 @@ while (gasStations == 0 && length(highway) > k * distance) || ...
       (length(highway) - distance > ((distance / gasStations) + numDev * dev) * k && distance < length(highway))
       if highway(distance) ~= 0
           gasStations = gasStations + 1;
-          dev = 0.75*dev + 0.25 * abs((distance / gasStations) - (distance - lastStation));
+          dev = beta*dev + (1-beta) * abs((distance / gasStations) - (distance - lastStation));
           lastStation = distance;
       end
       distance = distance + 1;
@@ -51,7 +51,6 @@ while i1 <= length(highway)
     
     i1 = i1 + 1;
 end
-display(length(stationRates));
 
 % You might have run out of gas
 if i1 > length(highway)

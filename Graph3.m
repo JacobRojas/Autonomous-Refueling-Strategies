@@ -3,11 +3,11 @@ clear all
 
 kValues = [4 9 16 36];
 densities = 0.1:0.1:0.5;
-numDev = 1;
+numDev = 2;
 
 %Switch the comments to switch between stopping point methods
-%stoppingEq =  @(x) ceil(x/exp(1));
-stoppingEq =  @(x) round(sqrt(x));
+stoppingEq =  @(x) ceil(x/exp(1));
+%stoppingEq =  @(x) round(sqrt(x));
 
 numSim = 500;
 %          k                 lam                sim#
@@ -19,7 +19,7 @@ for simNum = 1:numSim
         highway = construct(densities(i), 1000);
         for k = 1:length(kValues)
             %fprintf("k: %d, density: %d", kValues(k), densities(i));
-            [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] = SGAS3(highway, kValues(k), stoppingEq, numDev);
+            [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] = SGAS3(highway, kValues(k), stoppingEq, numDev, 0.75);
         end
     end
 end
