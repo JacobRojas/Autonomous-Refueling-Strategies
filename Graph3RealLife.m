@@ -1,12 +1,12 @@
 close all
 clear all
 
-kValues = 2:1:32;
-numDev = 3;
+kValues = 2:1:16;
+numDev = 2;
 
 %Switch the comments to switch between stopping point methods
-%stoppingEq =  @(x) ceil(x/exp(1));
-stoppingEq =  @(x) round(sqrt(x));
+stoppingEq =  @(x) ceil(x/exp(1));
+%stoppingEq =  @(x) round(sqrt(x));
 
 
 rates(1:length(kValues)) = 10;
@@ -15,7 +15,7 @@ stops(1:length(kValues)) = 10;
 
 highway = reallife("SANMO_AUS.csv");
 for k = 1:length(kValues)
-    [rates(k), starts(k), stops(k)] = SGAS3(highway, kValues(k), stoppingEq, numDev);
+    [rates(k), starts(k), stops(k)] = SGAS3(highway, kValues(k), stoppingEq, numDev, 0.75);
 end
 
     subplot(2, 1, 1);
