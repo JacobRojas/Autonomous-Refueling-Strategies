@@ -1,0 +1,332 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+%\usepackage{algorithmic}
+%\usepackage{graphicx}
+\usepackage{textcomp}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{algorithmic}
+\usepackage[ruled]{algorithm}
+\usepackage{color}
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{amsthm}
+\usepackage{multirow}
+
+\usepackage[papersize={8.5in,11in}, left=0.64in, right=0.64in, top=0.75in, bottom=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+
+
+\begin{document}
+
+\title{Auto Gas Adding using Vehicle-to-Infrastructure Communication in Smart Cities }
+
+\author{
+% Your names and contact info \\
+%Xiao Chen \\
+%Department of Computer Science, Texas State University, San Marcos, TX $78666$ \\
+%Email: xc10@txstate.edu
+}
+\maketitle
+
+% ------------------------------------------------------------------------------------------------- Abstract
+\begin{abstract}
+
+\end{abstract}
+
+\begin{IEEEkeywords} feedback, forwarding, maximum transmission unit, opportunistic mobile social networks  \end{IEEEkeywords}
+
+
+% ------------------------------------------------------------------------------------------------- Introduction
+\vspace{-0.3cm}
+\section{Introduction}
+Intelligent Transportation Systems (ITS) \cite{Alam2016} is one of the major structures in building a safe, secure, and efficient smart city \cite{Bowerman2000}. It has noticed particular development in recent years thanks to the emergence of vehicular networks as a result of advancements in intelligent systems, wireless technologies, ad-hoc networking, and the automobile industry. Vehicular networks are formed among moving vehicles, road side units (RSUs), and pedestrians that carry communication devices. They can be deployed in rural, urban, and highway environments.  There are three main scenarios for vehicular communication: vehicle-to-vehicle (V2V), vehicle-to-infrastructure (V2I), and vehicle-to-pedestrian (V2P) \cite{Tseng2015}. Among these, V2I technologies capture vehicle-generated traffic data, wirelessly providing information such as advisories from the infrastructure to the vehicle that inform the driver of safety, mobility, or environment related conditions. State and local agencies are likely to install V2I infrastructure alongside or integrated with existing ITS equipment.
+
+Recently, self-driving vehicles have attracted tremendous attention from all walks of life. The IEEE researchers predict that self-driving vehicles will comprise $75\%$ of total traffic on the road by the year $2040$ \cite{IEEEPrediction}.  Self-driving vehicles will provide tremendous benefits to society in terms of convenience and quality of life. Such vehicles will provide unprecedented access to transportation to those who need it most and those with limited access to public transportation. They will make road safer by reducing human errors and allow the driver to do something more productive. These benefits will not be realized unless vehicles are truly autonomous. At this technology level, the driver hands over control to the vehicle and the driver is no longer responsible for monitoring the system.  This will mean that the vehicle will be able to handle all situations that may occur on the road.
+
+The emergence of self-driving vehicles and their networks will impose new requirements in the fields of safety messaging, traffic monitoring, lane changing, and intersection management for applications and services. Over the past few decades, researchers have extensively investigated the potential of designing communication protocols  that involve V2V \cite{Abbasi2018, Demba2018}, V2I \cite{Noh2015, Silva2018}, and V2P \cite{Bian2018, Corchero2018}.
+
+\begin{figure}
+\centering
+\includegraphics[width=3.08in]{v2i.eps}
+\caption{RSUs at gas stations sending gas prices to OBUs in vehicles }
+\label{v2i}
+\vspace{-0.3cm}
+\end{figure}
+
+Several solutions to the intelligent transport systems have been installed in the vehicles and currently available on the market, such as autonomous driving \cite{Arena2018}, assisted parking systems \cite{Liu2018}, anti-collision sensors \cite{Sanjana2017}, driver notification systems \cite{Tijerina2016}, and intelligent navigation systems \cite{Zhang2016}.
+
+In this paper, we will work on an application using V2I that, to our best knowledge, has not been discussed so far. This application is the vehicle gas adding strategy (GAS) problem. Since the self-driving vehicle has the whole control of the vehicle, it needs to decide when to stop to add gas. When a vehicle is driving on the road, it can encounter many gas stations. If its gas tank is running low, it needs to stop to add gas. We assume that gas stations can have different gas prices that can be ranked from the highest to the lowest with no ties. At each gas station, an RSU is deployed. And in each vehicle, an On Borad Unit (OBU) is installed. In V2I, RSU and OBU are the communicating nodes.  They are dedicated short-range communication (DSRC) devices. DSRC works in $5.9$ GHz band with bandwidth of $75$ MHz and approximate range of $300$ m \cite{DSRC}.   When a vehicle passes by a gas station, the RSU at the gas station  transmits the gas price of the station to the vehicle (see Figure \ref{v2i}). The goal of the vehicle is to add gas at the lowest possible price without running out of gas. We assume that once a vehicle passes a gas station, it cannot come back because an efficient self-driving vehicle wants to get to the destination as soon as possible.  We assume that a vehicle expects to compare $k$ gas stations before it makes a decision to stop. For each gas station $j$, the vehicle can only ascertain the relative rank of the gas station relative to the previous $j-1$ viewed gas stations. Under this condition, if the vehicle stops too early, it does not have the risk of running out of gas but there may be lower prices ahead. On the other hand, if the vehicle stops too late, it may not find a gas station anymore before running out of gas. So our task is find the best solution to the GAS problem. In other words, what is the best stopping rule for the vehicle to stop to add gas.
+
+The GAS problem resembles the classic secretary problem (CSP) \cite{CSP}, where a decision maker (DM) wants to hire the best secretary out of $n$ rankable applicants for a position. But the GAS problem is different in that the number of gas stations ahead before the vehicle runs out of gas is not known while the number of applicants in CSP is fixed and known. So for the GAS problem, the focus is not the stopping rule but the starting rule. That is,  when the vehicle should start to look for a gas station so that it has the highest chance to encounter $k$ gas stations  before it runs out of gas. We propose a solution to the GAS problem which we refer to as {\em SGAS}. Our solution SGAS has two parts: the first part is to determine the starting point for the vehicle to look for a gas station so that it has the highest probability to see $k$ gas stations ahead before it runs out of gas; the second part is that once the vehicle starts looking, it will use the optimal stopping rule of CSP to stop at the gas station that most likely offers the lowest gas price. To find the best starting rule is our main task in this paper. In search of the starting rule, an intuition is that it is related to the distribution of the gas stations on the road because the more the gas stations, the later the vehicle can start looking. Reverse, otherwise. Therefore, we discuss a possible distribution of gas stations in real life:  the Poisson distribution. Then we put forward the starting rule for each distribution.  We evaluate the effectiveness of our strategies using simulations. The simulation results show that ...
+
+The differences of our work from others and the key contributions of our work are as follows:
+\begin{itemize}
+\item We are the first to discuss gas adding strategy (GAS) problem of self-driving vehicles to the best of our knowledge.
+\item We provide solutions to the GAS problem by discussing the Poisson distribution.
+\item We demonstrate the effectiveness of our schemes analytically and experimentally by simulations.
+\end{itemize}
+
+The rest of the paper is organized as follows: Section \ref{related} references the related works;  Section \ref{problem} defines the problem;  Section \ref{solution} presents our solution;  Section \ref{analysis} gives mathematical analyzes of our solution;  Section \ref{simulations} shows the simulations; and Section \ref{conclusion} is the conclusion.
+
+
+
+\section{Related Works} \label{related}
+In the classic secretary problem (CSP) \cite{CSP}, a DM wants to hire the best secretary out of $n$ rankable applicants for a position. The applicants are interviewed one by one in a random order.  When the DM interviews the $j$th applicant in the sequence, she gains information sufficient to rank the applicant among all applicants interviewed so far, but is unaware of the quality of yet unseen applicants.   Her objective is to find an optimal strategy or the stopping rule to maximize the probability of selecting the best applicant. The CSP can be formally stated below:
+
+
+\begin{enumerate}
+\item  There is a fixed and known number $n$ of applicants who can be ranked from the best $1$ to the worst $n$ without a tie competing for a single position.
+\item The applicants are interviewed sequentially in a random order (with a total of $n!$ orderings with equal probability).
+\item For each applicant $j$, the DM can only know the relative rank of the applicant, that is, how good the applicant is relative to the previous $j-1$ applicants.
+\item Once rejected, an applicant cannot be called back later. If no candidate has been selected before the last one, the last one must be accepted.
+\item The DM earns a payoff of $1$ for selecting the applicant with absolute rank $1$ in the $n$ applicants and $0$, otherwise.
+\end{enumerate}
+
+
+The problem has an elegant solution and the optimal (expected payoff maximizing) search policy is to interview and reject the first $t^{*}-1$ applicants and then to accept the first one thereafter with a relative rank of $1$ \cite{Gilbert1966}. The optimal cutoff can be obtained by
+
+$t^{*} = \min \{t \geq 1: \sum_{k=t+1}^{n} \frac{1}{k-1} \leq 1\} $
+
+The cutoff $t^{*}$ converges to $\frac {n}{e}$, where $e$ is the base of the natural logarithm, and the optimal policy selects the best applicant with probability $\frac {1} {e} \approx 0.3679$ as $n \rightarrow \infty$. Both $t^{*}$ and the selection probability converge from above. When $n=10, t^{*}=4$ and the best applicant is selected with probability $0.4583$?. Already at $n=20, t^{*}=8$ and the probability of success is $0.3842$. At $n=100, t^{*}=37$ and the success probability is $0.3710$. A historical review of the CSP can be found in Ferguson \cite{Ferguson1989} and in Samuels \cite{Samuels1992}. Depending on the context, the problem is sometimes referred to by other names such as the ``Sultan’s dowry" problem).
+
+\section{Problem Statement} \label{problem}
+In this section, we define the problem we want to solve. We assume in a smart city, self-driving vehicles need to find the best strategy to add gas. A self-driving vehicle is driving on the highway. When it comes close to a gas station, the OBU in the vehicle and the RSU at the gas station can communicate with each other and the gas price at the gas station can be transmitted to the vehicle. When the vehicle gets the price, it learns the price of the gas station relative to those previously seen. The vehicle expects to compare at most $k$ gas stations from the time it wants to add gas to the time it runs out of gas. The objective of the vehicle is to select the gas station which offers the lowest price over all those have been seen and those not-yet-seen before it runs out of gas. We call this problem the gas-adding-strategy (GAS) problem. The conditions in this problem can be formally stated as follows:
+
+\begin{enumerate}
+\item A vehicle can observe sequentially a list of gas prices offered by the gas stations as it drives by on the highway.
+\item From the time the vehicle plans to add gas to the time it runs out of gas, the expected number of gas stations it encounters along the highway is $k$.
+\item The prices offered by the gas stations can be ranked from the lowest to the highest with no ties.
+\item For each gas station $j$, the vehicle can only ascertain the {\em relative rank} of the gas station relative to the previous $j-1$ viewed gas stations.
+\item Once the vehicle passes a gas station, it cannot later come back. If it reaches the point of running out of gas, the vehicle must add gas.
+\end{enumerate}
+
+
+\section{Our Solution SGAS}
+In this section, we present our solution SGAS to the GAS problem. SGAS has two parts. The first part is to find the starting rule for the vehicle to start looking for the gas stations so that there is a maximum probability that the expected number of the gas stations ahead is $k$ before the vehicle runs out of gas. Once the first part can be decided, the second part is to use the optimal stopping rule of the CSP to let the vehicle stop at the gas station that has the best chance to offer the lowest gas price.
+
+As mentioned in the introduction section, our focus in this section is to find the starting rule. Since the starting rule is related to the distribution of the gas stations, we will discuss a practical distribution: the Poisson distribution in the following paragraphs.
+
+\subsection{Starting Rule}
+The purpose of the starting rule is to find out when a vehicle should start to look for a gas station so that it has the highest probability to encounter an expected $k$ gas stations before it runs out of gas. We denote the distance a vehicle can travel from the time it starts to look for a gas station to the time it runs out of gas as $\tau$. The starting point for the vehicle is when it has $\tau$ distance left before it shuts down. So the starting rule depends on the determination of $\tau$.
+
+The value of $\tau$ is dynamic. It depends on how many expected gas stations $k$ the vehicle wants to compare gas prices of and the density of the gas stations, because if the density of the gas stations is low, the distance $\tau$ should be longer. In other words, the vehicle should start looking for a gas station earlier. Otherwise, the vehicle can wait longer looking for a gas station. Now the problem becomes:   Given the number of gas stations that the vehicle wants to observe $k$, and gas station density denoted by $\lambda$, we want to find out $\tau$ that can maximize the probability that the vehicle can encounter $k$ gas stations as shown in optimization problem (\ref{goal}).
+
+\begin{equation} \label{goal}
+\begin{aligned}
+   & \underset{\tau}{\text{maximize}}
+   & &  p(k, \lambda, \tau) \\
+   & \text{subject to} & & k, \lambda, \tau >0    \\
+\end{aligned}
+\end{equation}
+
+Once the value of $\tau$ is known, then the vehicle can find out when it should start to look for a gas station. There are a couple of ways a vehicle can know this. Number one: the vehicle knows how many miles it can travel with a full tank. It can subtract the miles already traveled recorded by the odometer. When the result equals $\tau$, it can start to look for a gas station. Number two: depending on the model, the vehicle knows its mileage per gallon (mpg) number. It can multiply the mpg number with the remaining number of gallons in the tank. When that result equals $\tau$, it can start to look for a gas station.
+
+In the next paragraphs, we find a solution to solving the optimization problem (\ref{goal}) based on Poisson gas station distribution.
+
+\subsubsection{Poisson Distribution}
+In this section, we assume the spread of the gas stations follows the Poisson distribution with a density of $\lambda$. To obtain the value of $\tau$, we go through the following steps. We first derive the probability $p(k, \lambda, \tau)$ for the vehicle to encounter $k$ gas stations from the time it plans to add gas to the time it runs out of gas. And then we maximize $p(k, \lambda, \tau)$ which leads to the relationship of $k$, $\lambda$, and $\tau$. After that, we estimate the density $\lambda$ of the Poisson distribution. Finally, we  calculate $\tau$.
+
+\noindent (a). Derive probability $p(k, \lambda, \tau)$
+
+ We divide the distance a vehicle can drive from the time it plans to add gas to the time it runs out of gas $\tau$ into tiny segments of length $\delta$ each. The number of segments $m=\frac{\tau}{\delta}$. Tiny segment $\delta$ is so picked that the probability of seeing one gas station is $\lambda \delta$, where $\lambda$ is the density of the Poisson distribution. With these defined, the probability of seeing $k$ gas stations in segment $\delta$ can be stated as follows:
+
+\[
+p(k, \delta) =
+\begin{cases}
+1-\lambda \delta, & \text{$k = 0$}\\
+\lambda \delta, &\text{$k = 1$}\\
+0, &\text{$k > 1$}\\
+\end{cases}
+\]
+
+
+
+Now we can calculate the probability to see $k$ gas stations in distance $\tau$. This process resembles the coin flip in the Bernoulli process \cite{Bernoulli}. We imagine that we have a total of $m$ segments and $k$ out of which can see a gas station. The probability to see one gas station in a tiny segment $\delta$ is $p(1,\delta)=\lambda \delta$. Since $m = \frac{\tau}{\delta}$, $p(1, \delta)= \frac{\lambda \tau}{m}$. In other words, the probability not to see a gas station in a tiny segment is $1-\frac{\lambda \tau}{m}$. Then in the distance of $\tau$, the probability to see $k$ stations is $(\frac{\lambda \tau}{m})^{k}$ and the probability not to see a gas station is $(1-\frac{\lambda \tau}{m})^{m-k}$. To put the pieces together, in  distance $\tau$, the probability to see $k$ gas stations is:
+
+\[p(k, \lambda, \tau) = \binom{m}{k}  (\frac{\lambda \tau}{m})^{k}(1-\frac{\lambda \tau}{m})^{m-k} \]
+
+Since $\delta$ is very small, we let $\delta \rightarrow 0$. Then $m \rightarrow \infty$. So
+
+\begin{equation} \label{ppdf}
+p(k, \lambda, \tau) =\lim_{m \rightarrow \infty} \binom{m}{k}  (\frac{\lambda \tau}{m})^{k}(1-\frac{\lambda \tau}{m})^{m-k} = \frac{(\lambda \tau)^{k} e^{-\lambda \tau}}{k!}
+\end{equation}
+
+\noindent (b). Maximize $p(k, \lambda, \tau)$
+
+To maximize $p(k, \lambda, \tau)$, we take the derivative of $\frac{(\lambda \tau)^{k} e^{-\lambda \tau}}{k!}$ with respect to $\tau$ and make the result equal to zero. We have
+
+\[ \frac{k(\lambda \tau)^{k-1}-(\lambda \tau)^k} {k! e^{\lambda \tau}} =0 \]
+
+So,
+
+\begin{equation}\label{klambdatau}
+  \tau = \frac{k}{\lambda}
+\end{equation}
+
+From Equation (\ref{klambdatau}), we can see that to a certain gas station density, if the vehicle wants to compare more gas stations ($k$ is larger), and to a fixed number of gas stations to compare, if the density of the gas stations is lower, the vehicle needs to start looking earlier.
+
+\noindent (c). Estimate   $\lambda$
+
+We estimate $\lambda$ based on the number of gas stations observed by the vehicle in its driving history. Suppose the history of distance the vehicle observes is $D$ and $D>\tau$. We divide distance $D$ into $m$ segments and assume that the vehicle observes a list of gas stations $k_1, k_2, \cdots, k_m $ along the highway in these segments, respectively. Since the distribution of the gas stations follows Poisson distribution,  now the question is to estimate the density $\lambda$  of the gas stations.
+
+This estimation can be done using the  maximum likelihood estimation (MLE) method \cite{MLE}.   The MLE is:
+
+\[ L(\lambda|k_1, \cdots, k_m) = \Pi_{i=1}^{m}p(k_i|\lambda) = \Pi_{i=1}^{m}\frac{{\lambda}^{k_{i}}e^{-\lambda}}{k_{i}!} \]
+
+Here, $\lambda$ is unknown and $k_1, \cdots, k_m$ are known. To find the $\lambda$ that can maximize the $L$ function, we take the $ln$ of the two sides first.
+
+\begin{align*}
+\ln L(\lambda|k_1, \cdots, k_m) &= \sum_{i=1}^{m}[-\lambda+k_{i}\ln \lambda - \ln(k_{i}!)] \\
+                                &= -m \lambda + \ln \lambda \sum_{i=1}^{m}k_{i}-\sum_{i=1}{m}\ln (k_{i}!)
+\end{align*}
+
+And then, we take the derivative with respect to $\lambda$ and make it to zero. We get:
+
+\[-m = \frac{1}{\lambda}\sum_{i=1}^{m}k_{i} \]
+
+So,
+\begin{equation} \label{lambda}
+\lambda = \frac{1}{m} \sum_{i=1}^{m}k_{i}
+\end{equation}
+
+\noindent (d). Estimate   $\tau$
+
+Since the vehicle expects to compare prices from $k$ gas stations, the value $k$ is known. The variable $\lambda$ can be obtained from the above MLE method. So combining Equations (\ref{klambdatau}) and (\ref{lambda}),  the value of $\tau$ is:
+
+\begin{equation} \label{tau}
+\tau = \frac{k}{\lambda} = \frac{mk}{\sum_{i=1}^{m}k_{i}}
+\end{equation}
+
+\subsection{Stopping Rule}
+Now that we have determined the starting point for the vehicle to start looking, we use the optimal stopping rule in \cite{Gilbert1966}. That is, passing by the first $\frac {k}{e}$ gas stations that are encountered and then stopping at the first gas station which offers a lower price than every gas station seen so far or continuing to the last gas station if this never occurs. In our context, we assume that the last gas station is the station where the vehicle has the warning light on.
+
+\subsection{SGAS Algorithm}
+
+The whole solution SGAS is presented in Fig. \ref{SGAS}.
+
+\begin{figure}[!hbt]
+\vspace{0.2cm}
+\hrule \medskip \noindent {\bf Algorithm SGAS: Solution to the GAS problem } \smallskip
+\hrule
+\smallskip
+\begin{algorithmic}[1]
+\STATE {\bf Inputs:} the total mileage Total\_Mileage a vehicle can drive from a full tank, the distance driven so far Driven\_Mileage, the number of gas stations $k$ the vehicle wants to compare, every $d$ miles that the vehicle wants to count gas stations.
+\STATE {\bf Output:} the gas station $j$ where the vehicle stops for gas
+\WHILE {$Total\_Mileage - Driven\_Mileage > \tau$ ($\tau$ is calculated using Equation (\ref{tau})}
+\STATE Keep driving and count the number of gas stations every $d$ miles to estimate density $\lambda$ using Equation (\ref{lambda})
+\ENDWHILE
+\IF {$Total\_Mileage - Driven\_Mileage == \tau$}
+\STATE start to compare the prices at encountered gas stations and pass $\lceil\frac{k}{e}\rceil$ of them
+\ENDIF
+\STATE $j = \lceil\frac{k}{e}\rceil + 1$
+\WHILE {the warning light is not on and gas station $j$ does not offer the lowest price compared so far }
+\STATE drive to the next gas station; $j = j+1$
+\ENDWHILE
+\STATE add gas at station $j$;
+\end{algorithmic}
+\hrule
+\caption{The solution to the GAS problem}
+\label{SGAS}
+\end{figure}
+
+The main idea of the SGAS algorithm is as follows: the vehicle will keep driving and counting the number of gas stations encountered every $d$ miles. In this way, the vehicle can calculate the density $\lambda$ using Equation (\ref{lambda}). If $\lambda$ is known, $\tau$ can be calculated also. If the difference between the total mileage the vehicle can drive with a full tank and the mileage driven so far is equal to $\tau$, the vehicle can start comparing the gas prices offered by the encountered gas stations. According to the optimal stopping rule, the vehicle will pass the first $\frac{k}{e}$ gas stations. In our context, the number of gas stations can only be integers. We take the ceiling of $\frac{k}{e}$. So the vehicle will pass $\lceil\frac{k}{e}\rceil$ gas stations. Then the vehicle will add gas at the first gas station that offers the lowest price compared so far or the gas station where the vehicle has the warning light on.
+
+%\vspace{-0.3cm}
+\section{Simulations} \label{simulations}
+In this section, we evaluate the effectiveness of our solution SGAS by comparing it with other schemes using a custom simulator written in Matlab.
+
+\subsection{Algorithms Compared}
+\begin{enumerate}
+\item {\em The SGAS} (SGAS): our proposed solution to the GAS problem.
+\item {\em The last minute algorithm} (LastMinute):  the vehicle will stop at the first gas station it encounters when the warning light is on.
+
+\end{enumerate}
+
+\subsection{Setting Gas Stations}
+We assume that the vehicle is driving on a highway with a length of $L$. For each unit length on the highway,  we rely on a random number generator to generate a number $x$ between $1$ and $100$. If $x \leq 100\lambda$, we set a gas station at that location. After this process, the density of gas stations along the highway is $\lambda$.
+
+\subsection{Metric}
+If a vehicle decides to compare the prices from $k$ gas stations, we calculate the {\em success ratio} of the vehicle eventually adding gas at the gas station that offers the lowest price among the $k$ gas stations.
+
+\subsection{Setting}
+We set the highway length $L$ to be $500$ miles.
+
+To estimate $\lambda$, the vehicle starts to count the number of gas stations every $d$ miles and estimate  density $\lambda$ using Equation (\ref{lambda}). We set $d$ from $50$ to $80$ miles with a step of $10$.
+
+We set the number of gas stations that a vehicle wants to compare $k$ to $5, 6$, and $8$.
+
+We randomly generate a gas price per gallon for each station with two digits after the decimal point from the range $[2, 4]$.
+
+\subsection{Results}
+Fig. \ref{figk5}: $k=5$, horizontal axis: $d$ from $50$ to $80$ miles with a step of $10$. Vertical axis: success ratio.
+
+Fig. \ref{figk6}: $k=6$, horizontal axis: $d$ from $50$ to $80$ miles with a step of $10$. Vertical axis: success ratio.
+
+Fig. \ref{figk8}: $k=8$, horizontal axis: $d$ from $50$ to $80$ miles with a step of $10$. Vertical axis: success ratio.
+
+\section{Conclusion} \label{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{vehref}
+
+\end{document}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=3.5in]{PMTU.eps}
+\vspace{-0.6cm}
+\caption{Path Maximum Transmission Unit (PMTU) Discovery in OMNs} \label{PMTU}
+\vspace{-0.65cm}
+\end{figure}
+
+\begin{figure}
+	\centering
+    \subfigure[Infocom trace-latency to get MTB for one receiver]
+      {\includegraphics[height=1.2in, width=1.65in]{theory_practice_one_dest.eps}
+      }
+      %\hspace{0.1cm}
+    \subfigure[Infocom trace-latency to get MTB for all receivers]
+      {\includegraphics[height=1.2in, width=1.65in]{theory_practice_all_dest.eps}
+      }
+    \subfigure[Sigcomm trace-latency to get MTB for one receiver]
+      {\includegraphics[height=1.2in, width=1.65in]{theory_practice_one_dest_sig.eps}
+      }
+    \subfigure[Sigcomm trace-latency to get MTB for all receivers]
+      {\includegraphics[height=1.2in, width=1.65in]{theory_practice_all_dest_sig.eps}
+      }
+    \caption{Theoretical and practical MTBs using Infocom  and Sigcomm traces}
+    \label{f1}
+ \vspace{-0.5cm}
+\end{figure}
+
+
+\[
+    \binom{m}{k} = \frac{m!}{k!(m-k)!}
+\]
+
+In this paper, we consider the vehicular communication systems  in a smart city. Vehicular communication systems are computer networks in which vehicles and roadside units (RSUs) are the communicating nodes, providing each other with information, such as safety warnings and traffic information. They can be effective in avoiding accidents and traffic congestion.
+
+The transport field has noticed particular development in recent years thanks to the application
+of intelligent systems. Traditional transport arrangements have been supplanted by Intelligent
+Transport Systems (ITSs) [1–3]. These new technologies are assisting in solving the main problems of
+transport engineering, i.e., traffic congestion and accidents. Nevertheless, these systems must be able
+to cooperate, for instance, allowing the communication with and among vehicles [4]. The interaction
+between the various involved entities requires the information exchange to use proper communication
+protocols, such as the IEEE 802.11p [5,6] and LTE-V2V [7,8] standards, designed to support vehicle
+transmissions [9,10]. 
