@@ -4,7 +4,9 @@ raw = open('Trip1.html').read()
 html = BeautifulSoup(raw, 'html.parser')
 file = open('trip.csv', 'w')
 
-for listItem in html.div.select('div'):
+html = html.find(id="steps")
+
+for listItem in html.select('div'):
 	if 'row' in listItem['class']:
 		if listItem.a == None:
 			for d in listItem.div.div.select('div'):
