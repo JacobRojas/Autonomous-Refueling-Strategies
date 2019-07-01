@@ -3,3 +3,5 @@ SGAS_original.m
 simResult.txt
 *.asv
 *.ps1
+*.csv
+.*
