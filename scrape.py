@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 for i in range(1, len(sys.argv)):
 	raw = open(sys.argv[i]).read()
 	html = BeautifulSoup(raw, 'html.parser')
-	file = open('Trip' + str(i) + '.csv', 'w')
+	file = open(sys.argv[i].split('.')[0] + '.csv', 'w')
 
 	html = html.find(id="steps")
 
