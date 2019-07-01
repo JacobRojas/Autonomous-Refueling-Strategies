@@ -6,17 +6,25 @@ densities = 0.1:0.1:0.5;
 numDev = 2;
 
 %Switch the comments to switch between stopping point methods
-stoppingEq =  @(x) ceil(x/exp(1));
-%stoppingEq =  @(x) round(sqrt(x));
+%stoppingEq =  @(x) ceil(x/exp(1));
+stoppingEq =  @(x) round(sqrt(x));
+%stoppingEq =  @(x) 0.7 * round(sqrt(x));
 
+%Number of synthetic or real highways you want/have
 numSim = 500;
+
 %          k                 lam                sim#
 rates(1:length(kValues),1:length(densities),1:numSim) = 10;
 starts(1:length(kValues),1:length(densities),1:numSim) = 10;
 stops(1:length(kValues),1:length(densities),1:numSim) = 10;
 for simNum = 1:numSim
     for i = 1:length(densities)
+        %You can contruct using synthetic data or real data
+        % if you use real data, set numSim to the number of 'Trip's you
+        % have
         highway = construct(densities(i), 1000);
+        %highway = reallife("Trip" + simNum + ".csv");
+        
         for k = 1:length(kValues)
             %fprintf("k: %d, density: %d", kValues(k), densities(i));
             [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] = SGAS3(highway, kValues(k), stoppingEq, numDev, 0.75);
