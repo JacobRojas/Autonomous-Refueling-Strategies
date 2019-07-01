@@ -1,6 +1,14 @@
+import sys
 from bs4 import BeautifulSoup
 
-raw = open('Trip1.html').read()
+source = 'Trip1.html'
+if(len(sys.argv) == 2):
+	source = 'Trip' + sys.argv[1] + '.html'
+else:
+	print('usage: ' + sys.argv[0] + ' [Trip num]')
+	quit()
+
+raw = open(source).read()
 html = BeautifulSoup(raw, 'html.parser')
 file = open('trip.csv', 'w')
 
