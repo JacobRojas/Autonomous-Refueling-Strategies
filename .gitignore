@@ -5,3 +5,4 @@ simResult.txt
 *.ps1
 *.csv
 .*
+analyze.py
