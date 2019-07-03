@@ -1,7 +1,7 @@
 clear all
 close all
 
-kValues = [4 9 16]
+kValues = [4 9 16];
 stoppingEq =  @(x) ceil(x/exp(1));
 %stoppingEq =  @(x) ceil(sqrt(x));
 
@@ -26,11 +26,14 @@ end
 
 for i = 1:3
     subplot(3, 1, i);
-    stem(1:4, results(i, :));
+    stem((1:4) ./ 25, results(i, :));
     ylim([0 max(results(i, :))+0.1]);
-    xlim([0.5 4.5])
-    xticks(0:1:4);
+    xlim([0.03 0.17])
+    xticks((0:1:4) ./ 25);
     ylabel("Success reatio");
-    xlabel("Density / 25 units");
+    xlabel("Density");
     title(sprintf("k = %d", kValues(i)));
+    set(gca,'color','none')
 end
+%addpath('altmany-export_fig-b1a7288');
+%export_fig test.png -transparent

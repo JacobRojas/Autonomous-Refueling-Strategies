@@ -2,16 +2,16 @@ close all
 clear all
 
 kValues = [4 9 16 36];
-alpha = 0.4:0.05:0.9;
-numDev = 2;
+alpha = 0.2:0.05:0.8;
+numDev = 1;
 
 %Switch the comments to switch between stopping point methods
-stoppingEq =  @(x) ceil(x/exp(1));
-%stoppingEq =  @(x) round(sqrt(x));
+%stoppingEq =  @(x) ceil(x/exp(1));
+stoppingEq =  @(x) round(sqrt(x));
 %stoppingEq =  @(x) 0.7 * round(sqrt(x));
 
 %Number of synthetic or real highways you want/have
-numSim = 20;
+numSim = 30;
 
 %          k                 lam                sim#
 rates(1:length(kValues),1:length(alpha),1:numSim) = 10;
