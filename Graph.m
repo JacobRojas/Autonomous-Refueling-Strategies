@@ -26,14 +26,15 @@ end
 
 for i = 1:3
     subplot(3, 1, i);
-    stem((1:4) ./ 25, results(i, :));
-    ylim([0 max(results(i, :))+0.1]);
+    stem((1:4) ./ 25, results(i, :), 'Color',[1 0 0]);
+    ylim([0 0.5]);
     xlim([0.03 0.17])
     xticks((0:1:4) ./ 25);
     ylabel("Success reatio");
     xlabel("Density");
-    title(sprintf("k = %d", kValues(i)));
+    title(sprintf("\\color{black}k = %d", kValues(i)));
     set(gca,'color','none')
+    set(gca,'XColor','black','YColor','black')
 end
-%addpath('altmany-export_fig-b1a7288');
-%export_fig test.png -transparent
+addpath('altmany-export_fig-b1a7288');
+export_fig fig.png -transparent

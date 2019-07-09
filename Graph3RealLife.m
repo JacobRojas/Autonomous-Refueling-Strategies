@@ -3,7 +3,7 @@ clear all
 
 kValues = [4 9 16 36];
 alpha = 0.2:0.05:0.8;
-numDev = 1;
+numDev = 2;
 
 %Switch the comments to switch between stopping point methods
 %stoppingEq =  @(x) ceil(x/exp(1));
@@ -65,28 +65,37 @@ end
 
 for i = 1:length(kValues)
     subplot(length(kValues), 3, i*3-2);
-    stem(alpha, avgPrice(i, :));
+    stem(alpha, avgPrice(i, :), 'Color', [1 0 0]);
     ylim([1.9 max([3 max(avgPrice(i, :)+0.2)])]);
     %xticks(alpha);
     ylabel("Avg. Gas Price");
     xlabel("alpha");
-    title(sprintf("k = %d", kValues(i)));
+    title(sprintf("\\color{white}k = %d", kValues(i)));
+    set(gca,'color','none')
+    set(gca,'XColor','white','YColor','white')
     
     subplot(length(kValues), 3, i*3-1);
-    stem(alpha, outOfGasRate(i, :));
+    stem(alpha, outOfGasRate(i, :), 'Color', [1 0 0]);
     ylim([0 max(outOfGasRate(i, :))+0.1]);
     %xticks(alpha);
     ylabel("% ran out of gas");
     xlabel("alpha");
-    title(sprintf("k = %d", kValues(i)));
+    title(sprintf("\\color{white}k = %d", kValues(i)));
+    set(gca,'color','none')
+    set(gca,'XColor','white','YColor','white')
     
     subplot(length(kValues), 3, i*3);
-    stem(alpha, avgStart(i, :));
+    stem(alpha, avgStart(i, :), 'Color', [0 0 1]);
     hold on
-    stem(alpha, avgStop(i, :));
+    stem(alpha, avgStop(i, :), 'Color', [1 0 0]);
     ylim([0 max(avgStop(i, :))+0.1]);
     %xticks(alpha);
     ylabel("% highway before stop");
     xlabel("alpha");
-    title(sprintf("k = %d", kValues(i)));
+    title(sprintf("\\color{white}k = %d", kValues(i)));
+    set(gca,'color','none')
+    set(gca,'XColor','white','YColor','white')
 end
+%set(gcf, 'Position',  [100, 100, 2000, 700])
+%addpath('altmany-export_fig-b1a7288');
+%export_fig fig.png -transparent

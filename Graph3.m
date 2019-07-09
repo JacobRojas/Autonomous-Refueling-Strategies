@@ -65,28 +65,34 @@ end
 
 for i = 1:length(kValues)
     subplot(length(kValues), 3, i*3-2);
-    stem(densities, avgPrice(i, :));
+    stem(densities, avgPrice(i, :), 'Color', [0 0 1]);
     ylim([1.9 max([3 max(avgPrice(i, :)+0.2)])]);
     xticks(densities);
     ylabel("Avg. Gas Price");
     xlabel("Gas Station Density");
     title(sprintf("k = %d", kValues(i)));
+    set(gca,'color','none')
     
     subplot(length(kValues), 3, i*3-1);
-    stem(densities, outOfGasRate(i, :));
+    stem(densities, outOfGasRate(i, :), 'Color', [0 0 1]);
     ylim([0 max(outOfGasRate(i, :))+0.1]);
     xticks(densities);
     ylabel("% ran out of gas");
     xlabel("Gas Station Density");
     title(sprintf("k = %d", kValues(i)));
+    set(gca,'color','none')
     
     subplot(length(kValues), 3, i*3);
-    stem(densities, avgStart(i, :));
+    stem(densities, avgStart(i, :), 'Color', [1 0 0]);
     hold on
-    stem(densities, avgStop(i, :));
+    stem(densities, avgStop(i, :), 'Color', [0 0 1]);
     ylim([0 max(avgStop(i, :))+0.1]);
     xticks(densities);
     ylabel("% highway before stop");
     xlabel("Gas Station Density");
     title(sprintf("k = %d", kValues(i)));
+    set(gca,'color','none')
 end
+%set(gcf, 'Position',  [100, 100, 2000, 700])
+%addpath('altmany-export_fig-b1a7288');
+%export_fig fig.png -transparent
