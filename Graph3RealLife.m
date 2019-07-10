@@ -3,7 +3,8 @@ clear all
 
 kValues = [4 9 16 36];
 alpha = 0.2:0.05:0.8;
-numDev = 2;
+beta = 0.75;
+numDev = 1;
 
 %Switch the comments to switch between stopping point methods
 %stoppingEq =  @(x) ceil(x/exp(1));
@@ -27,7 +28,8 @@ for simNum = 1:numSim
         
         for k = 1:length(kValues)
             %fprintf("k: %d, density: %d", kValues(k), densities(i));
-            [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] = SGAS3(highway, kValues(k), stoppingEq, numDev, alpha(i));
+            [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] ...
+                = SGAS3(highway, kValues(k), stoppingEq, numDev, alpha(i));
         end
     end
 end
@@ -51,8 +53,8 @@ end
 avgStart(1:length(kValues), 1:length(alpha)) = 50;
 for i = 1:length(kValues)
     for j = 1:length(alpha)
-        total = sum(starts(i, j, starts(i, j, :) >= 0)) / length(highway);
-        avgStart(i, j) = total / length(starts(i, j, starts(i, j, :) >= 0));
+        total = sum(starts(i, j, stops(i, j, :) >= 0)) / length(highway);
+        avgStart(i, j) = total / length(starts(i, j, stops(i, j, :) >= 0));
     end
 end
 avgStop(1:length(kValues), 1:length(alpha)) = 50;
@@ -63,6 +65,8 @@ for i = 1:length(kValues)
     end
 end
 
+axisColor = 'black';
+
 for i = 1:length(kValues)
     subplot(length(kValues), 3, i*3-2);
     stem(alpha, avgPrice(i, :), 'Color', [1 0 0]);
@@ -70,9 +74,9 @@ for i = 1:length(kValues)
     %xticks(alpha);
     ylabel("Avg. Gas Price");
     xlabel("alpha");
-    title(sprintf("\\color{white}k = %d", kValues(i)));
+    title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
     set(gca,'color','none')
-    set(gca,'XColor','white','YColor','white')
+    set(gca,'XColor',axisColor,'YColor',axisColor)
     
     subplot(length(kValues), 3, i*3-1);
     stem(alpha, outOfGasRate(i, :), 'Color', [1 0 0]);
@@ -80,9 +84,9 @@ for i = 1:length(kValues)
     %xticks(alpha);
     ylabel("% ran out of gas");
     xlabel("alpha");
-    title(sprintf("\\color{white}k = %d", kValues(i)));
+    title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
     set(gca,'color','none')
-    set(gca,'XColor','white','YColor','white')
+    set(gca,'XColor',axisColor,'YColor',axisColor)
     
     subplot(length(kValues), 3, i*3);
     stem(alpha, avgStart(i, :), 'Color', [0 0 1]);
@@ -92,10 +96,10 @@ for i = 1:length(kValues)
     %xticks(alpha);
     ylabel("% highway before stop");
     xlabel("alpha");
-    title(sprintf("\\color{white}k = %d", kValues(i)));
+    title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
     set(gca,'color','none')
-    set(gca,'XColor','white','YColor','white')
+    set(gca,'XColor',axisColor,'YColor',axisColor)
 end
-%set(gcf, 'Position',  [100, 100, 2000, 700])
-%addpath('altmany-export_fig-b1a7288');
+set(gcf, 'Position',  [100, 100, 2000, 700])
+addpath('altmany-export_fig-b1a7288');
 %export_fig fig.png -transparent
