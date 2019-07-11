@@ -20,7 +20,8 @@ for simNum = 1:numSim
         highway = reallife("Trip" + simNum + ".csv");
         
         [rates(simNum), stops(simNum)] ...
-            = SGAS5(highway, stoppingEq, 0.85, 0.75, 0.6, 0.9);
+        %                                 α     β    st sec  st crit
+            = SGAS5(highway, stoppingEq, 0.85, 0.75,   0.6,   0.9);
         
         stops(simNum) = stops(simNum) / length(highway);
 end
