@@ -11,15 +11,13 @@ len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);
 
-position = 0;
-
 
 gasStations = 0;
 lastStation = 0;
 dev = 0;
 est = 0;
 %Calculate density for predicting k
-for position = (position+1):stopCalc
+for position = 1:stopCalc
     if highway(position) ~= 0
           gasStations = gasStations + 1;
           if(gasStations == 1)
@@ -32,12 +30,12 @@ for position = (position+1):stopCalc
     end
 end
 
-k = round((stopSecretary - position)/est);
+k = round((stopSecretary - stopCalc)/est);
 stationsToPass = stoppingEq(k);
 stationRates = [];
 
 %Run the secretary problem
-for position = (position+1):stopSecretary
+for position = stopCalc:stopSecretary
     if highway(position) ~= 0
         stationRates = [stationRates highway(position)];
     
@@ -57,7 +55,7 @@ for position = (position+1):stopSecretary
 end
 
 %In critical section. Stop at first available station
-for position = (position+1):len
+for position = stopSecretary:len
     if highway(position) ~= 0
         rate = highway(position);
         return
