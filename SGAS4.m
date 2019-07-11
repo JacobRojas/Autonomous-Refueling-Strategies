@@ -1,4 +1,6 @@
 function [rate, start, stop] = SGAS4(highway, k, stoppingEq, numDev, alpha, beta)
+%Takes in both alpha and beta: calculates density based on TCP RTO instead
+%of based on #GasStations / Distance
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k
@@ -68,8 +70,8 @@ end
 
 % Returning the rate payed.
 rate = highway(stoppingPoint);
-start = startingPoint;
-stop = stoppingPoint;
+start = startingPoint / length(highway);
+stop = stoppingPoint / length(highway);
 return
 
 end

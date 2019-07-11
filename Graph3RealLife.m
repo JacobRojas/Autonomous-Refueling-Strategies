@@ -53,14 +53,14 @@ end
 avgStart(1:length(kValues), 1:length(alpha)) = 50;
 for i = 1:length(kValues)
     for j = 1:length(alpha)
-        total = sum(starts(i, j, stops(i, j, :) >= 0)) / length(highway);
+        total = sum(starts(i, j, stops(i, j, :) >= 0));
         avgStart(i, j) = total / length(starts(i, j, stops(i, j, :) >= 0));
     end
 end
 avgStop(1:length(kValues), 1:length(alpha)) = 50;
 for i = 1:length(kValues)
     for j = 1:length(alpha)
-        total = sum(stops(i, j, stops(i, j, :) >= 0)) / length(highway);
+        total = sum(stops(i, j, stops(i, j, :) >= 0));
         avgStop(i, j) = total / length(stops(i, j, stops(i, j, :) >= 0));
     end
 end

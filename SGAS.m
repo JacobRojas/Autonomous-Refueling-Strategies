@@ -1,4 +1,7 @@
 function [success] = SGAS(highway, k, stoppingEq)
+%Given a highway, k value, and stopping equation, this function return
+%success (1) or fail (0) depending on whether the secretary solution selected the
+%lowest gas price
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k

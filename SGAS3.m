@@ -1,4 +1,5 @@
 function [rate, start, stop] = SGAS3(highway, k, stoppingEq, numDev, beta)
+%Takes in value beta and numDev for TCP RTO estimation of tau
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k
@@ -64,8 +65,8 @@ end
 
 % Returning the rate payed.
 rate = highway(stoppingPoint);
-start = startingPoint;
-stop = stoppingPoint;
+start = startingPoint / length(highway);
+stop = stoppingPoint / length(highway);
 return
 
 end

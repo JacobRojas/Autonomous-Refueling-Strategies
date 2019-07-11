@@ -1,4 +1,5 @@
 function [rate] = SGAS2(highway, k, stoppingEq)
+%Original SGAS solution but returns gas rate instead of success/failure
 
 %TESTING - we may not want there to be less than k gas stations
 if length(highway(highway>0)) < k

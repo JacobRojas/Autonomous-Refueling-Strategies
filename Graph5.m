@@ -1,30 +1,35 @@
 close all
 clear all
 
-
 %Switch the comments to switch between stopping point methods
 %stoppingEq =  @(x) ceil(x/exp(1));
 stoppingEq =  @(x) round(sqrt(x));
 %stoppingEq =  @(x) 0.7 * round(sqrt(x));
 
-%Number of synthetic or real highways you want/have
+alpha = 0.85;
+beta = 0.75;
+startSecretary = 0.6;
+startCritical = 0.9;
+
+%Number of real highways you have
 numSim = 30;
 
 rates(1:numSim) = 10;
 stops(1:numSim) = 10;
 for simNum = 1:numSim
-        %You can contruct using synthetic data or real data
-        % if you use real data, set numSim to the number of 'Trip's you
-        % have
-        %highway = construct(densities(i), 1000);
         highway = reallife("Trip" + simNum + ".csv");
         
         [rates(simNum), stops(simNum)] ...
-        %                                 α     β    st sec  st crit
-            = SGAS5(highway, stoppingEq, 0.85, 0.75,   0.6,   0.9);
+            = SGAS5(highway, stoppingEq, alpha, beta,   startSecretary,   startCritical);
         
         stops(simNum) = stops(simNum) / length(highway);
 end
+
+
+avgRate = sum(rates(rates > 0)) / length(rates(rates > 0))
+avgStop = sum(stops(stops > 0)) / length(stops(stops > 0))
+avgRunOutOfGas = -sum(rates(rates < 0)) / length(rates)
+
 
 % avgPrice(1:length(kValues), 1:length(alpha)) = 50;
 % for i = 1:length(kValues)
