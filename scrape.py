@@ -2,10 +2,14 @@ import sys
 from bs4 import BeautifulSoup
 
 for i in range(1, len(sys.argv)):
+	try:
+		file = open(sys.argv[i].split('.')[0] + '.csv', 'x')
+	except FileExistsError:
+		print("Skipping " + sys.argv[i].split('.')[0] + '.csv')
+		continue
+
 	raw = open(sys.argv[i]).read()
 	html = BeautifulSoup(raw, 'html.parser')
-	file = open(sys.argv[i].split('.')[0] + '.csv', 'w')
-
 	html = html.find(id="steps")
 
 	for listItem in html.select('div'):

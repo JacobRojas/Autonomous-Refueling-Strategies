@@ -5,6 +5,5 @@ simResult.txt
 *.ps1
 *.csv
 .*
-analyze.py
 altmany-export_fig-b1a7288/*
 *.png
