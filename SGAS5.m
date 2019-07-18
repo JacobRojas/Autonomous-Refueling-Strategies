@@ -1,4 +1,4 @@
-function [rate, position] = SGAS5(highway, stoppingEq, ...
+function [rate, stop] = SGAS5(highway, stoppingEq, ...
     alpha, beta, percentCalc, percentSecretary)
 %New solution separtes range of car into 3 sections: Density Observation,
 %Secretary Solution, and Critical. 1) Density Observation: Uses TCP RTO
@@ -31,6 +31,8 @@ for position = 1:stopCalc
 end
 
 k = round((stopSecretary - stopCalc)/est);
+%temp = highway(stopCalc:stopSecretary);
+%disp(k - length(temp(temp > 0)))
 stationsToPass = stoppingEq(k);
 stationRates = [];
 
@@ -42,12 +44,14 @@ for position = stopCalc:stopSecretary
         %Program seems to perform better if we don't stop at last one
         %Instead it keeps going until critical section is reached
 %         if length(stationRates) == k
+%             stop = position / len;
 %             rate = highway(position);
 %             return
 %         end
 
         if highway(position) <= min(stationRates) && ...
                 length(stationRates) >= stationsToPass
+            stop = position / len;
             rate = highway(position);
             return
         end
@@ -57,11 +61,12 @@ end
 %In critical section. Stop at first available station
 for position = stopSecretary:len
     if highway(position) ~= 0
+        stop = position / len;
         rate = highway(position);
         return
     end
 end
 
-position = -1;
+stop = -1;
 rate = -1;
 return
