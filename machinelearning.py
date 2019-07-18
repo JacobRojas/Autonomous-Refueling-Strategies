@@ -18,9 +18,9 @@ for line in file:
 
 #Now we will load the data. This time, each element of x data 
 #will be a list of three values instead of one. Use the following code:
-#iris = datasets.load_iris()
-#x_vals = np.array([[x[1], x[2], x[3]] for x in iris.data])
-#y_vals = np.array([y[0] for y in iris.data])
+# iris = datasets.load_iris()
+# x_vals = np.array([[x[1], x[2], x[3]] for x in iris.data])
+# y_vals = np.array([y[0] for y in iris.data])
 x_vals = np.array(x)
 y_vals = np.array(y)
 
@@ -30,8 +30,8 @@ print(y_vals)
 #Next we declare the batch size, placeholders, variables, and model output.
 #The only difference here is that we change the size specifications of the 
 #x data placeholder to take three values instead of one, as follows:
-batch_size = 50
-learning_rate = 0.001
+batch_size = 25
+learning_rate = 0.0000001
 x_data = tf.placeholder(shape=[None, 3], dtype=tf.float32)
 y_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 A = tf.Variable(tf.random_normal(shape=[3,1]))
@@ -55,7 +55,7 @@ sess.run(init)
 my_opt = tf.train.GradientDescentOptimizer(learning_rate)
 train_step = my_opt.minimize(loss)
 loss_vec = []
-for i in range(500):
+for i in range(100):
     rand_index = np.random.choice(len(x_vals), size=batch_size)
     rand_x = x_vals[rand_index]
     rand_y = np.transpose([y_vals[rand_index]])
