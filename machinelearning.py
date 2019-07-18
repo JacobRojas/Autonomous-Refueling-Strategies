@@ -1,4 +1,5 @@
 #First we load the necessary libraries and initialize a graph, as follows:
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
@@ -12,7 +13,7 @@ file = open(sys.argv[1], 'r')
 for line in file:
 	data = [float(d.strip()) for d in line.split(',')]
 	x.append([data[0], data[1], data[2]])
-	y.append(data[4])
+	y.append(data[3])
 
 
 #Now we will load the data. This time, each element of x data 
@@ -23,8 +24,8 @@ for line in file:
 x_vals = np.array(x)
 y_vals = np.array(y)
 
-print(len(x_vals))
-print(len(y_vals))
+print(x_vals)
+print(y_vals)
 
 #Next we declare the batch size, placeholders, variables, and model output.
 #The only difference here is that we change the size specifications of the 
