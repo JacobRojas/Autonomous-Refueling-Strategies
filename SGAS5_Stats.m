@@ -1,11 +1,7 @@
 function [] = SGAS5_Stats(highway, stoppingEq, ...
     alpha, beta, percentCalc, percentSecretary)
-%New solution separtes range of car into 3 sections: Density Observation,
-%Secretary Solution, and Critical. 1) Density Observation: Uses TCP RTO
-%calculations to estimate how many k gast stations will be seen in the
-%Secretary section of the car's range. 2) Secretary Solution: Runs the
-%Secretary Solution assuming k gas stations 3) Critical: Stops at the first
-%available Gas Station.
+%Collects stats for machine learning.
+%Format: n(0-percentCalc), highwayLength, EstDev, n(percentCalc-percentSecretary)
 fileID = fopen('realStats.csv', 'a');
 
 len = length(highway);
