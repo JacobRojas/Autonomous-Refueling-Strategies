@@ -103,8 +103,8 @@ for i in range(len(x)):
       {x_data: np.array([x[i]]), y_target: np.array([[y[i]]])})))
 
 #Save the model
-saver = tf.train.Saver()
-saver.save(sess, '/Users/kameroncarr/Documents/GitHub/TxSt2019/model.ckpt')
+#saver = tf.train.Saver()
+#saver.save(sess, '/Users/kameroncarr/Documents/GitHub/TxSt2019/model.ckpt')
 
 #Now we can observe the loss over the training 
 #iterations to be sure that it converged, as follows:
