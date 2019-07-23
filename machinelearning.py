@@ -4,10 +4,12 @@ import random
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.stderr = open('errors', 'w')
+
 import tensorflow as tf
 #from sklearn import datasets
 sess = tf.Session()
-
 
 x=[]
 y=[]
@@ -88,11 +90,10 @@ for i in range(1800):
     temp_test = sess.run(loss, feed_dict={x_data: rand_x, y_target: rand_y})
     test_loss.append(temp_test[0])
 
-    if (i+1)%250==0:
-        print('Step #' + str(i+1) + '\nA = ' + 
-        	str(sess.run(A)) + '\nb = ' + str(sess.run(b)))
-        print('Loss = ' + str(temp_loss[0][0]))
-        print('Test = ' + str(temp_test[0]))
+print('\nA = ' + 
+	str(sess.run(A)) + '\nb = ' + str(sess.run(b)))
+print('Loss = ' + str(temp_loss[0][0]))
+print('Test = ' + str(temp_test[0]))
 
 
 #Give estimates
