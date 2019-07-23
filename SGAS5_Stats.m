@@ -1,5 +1,5 @@
 function [] = SGAS5_Stats(highway, stoppingEq, ...
-    alpha, beta, percentCalc, percentSecretary)
+    alpha, beta, percentCalc, percentSecretary, segments)
 %Collects stats for machine learning.
 %Format: n(0-percentCalc), highwayLength, EstDev, n(percentCalc-percentSecretary)
 fileID = fopen('realStats.csv', 'a');
@@ -7,7 +7,19 @@ fileID = fopen('realStats.csv', 'a');
 len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);
+%Finding the length of each segment 
+segmentCalc = floor(stopCalc / segments);
+intervalStations = [];
+intervalStationCount = 0;
 
+%creating the fprintf format depending on how many segments the highway
+%will be divided into
+printFormat = '';
+symbol = '%d, ';
+for runs = 1:segments
+    printFormat = strcat(printFormat, symbol);
+end
+printFormat = strcat(printFormat, '%d,%d,%d\n');
 
 gasStations = 0;
 lastStation = 0;
@@ -17,6 +29,7 @@ est = 0;
 for position = 1:stopCalc
     if highway(position) ~= 0
           gasStations = gasStations + 1;
+          intervalStationCount = intervalStationCount + 1;
           if(gasStations == 1)
               est = position;
           else
@@ -24,6 +37,14 @@ for position = 1:stopCalc
               dev = beta*dev + (1-beta)*abs(est - (position - lastStation));
           end
           lastStation = position;
+    end
+    if (mod(position,segmentCalc) == 0)
+        intervalStations = [intervalStations intervalStationCount];
+        intervalStationCount = 0;
+    end
+    if (position == stopCalc)
+        intervalStations(segments)= intervalStations(segments) + ...
+                                     intervalStationCount;
     end
 end
 
@@ -39,5 +60,6 @@ for position = stopCalc:stopSecretary
     end
 end
 
-fprintf(fileID, '%d, %d, %d, %d\n', gasStations, len, dev, length(stationRates));
+fprintf(fileID, printFormat, intervalStations, len, dev, length(stationRates));
 fclose(fileID);
+
