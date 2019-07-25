@@ -5,7 +5,7 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-sys.stderr = open('errors', 'w')
+#sys.stderr = open('errors', 'w')
 
 import tensorflow as tf
 #from sklearn import datasets
@@ -44,7 +44,7 @@ print("Testing Set = " + str(len(x_test)))
 #x data placeholder to take three values instead of one, as follows:
 batch_size = math.floor(len(x_vals))
 test_size = len(x_test)
-learning_rate = 0.0012
+learning_rate = 0.00055
 x_data = tf.placeholder(shape=[None, dim], dtype=tf.float32)
 y_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 A = tf.Variable(tf.random_normal(shape=[dim,1]))
@@ -69,7 +69,7 @@ my_opt = tf.train.GradientDescentOptimizer(learning_rate)
 train_step = my_opt.minimize(loss)
 loss_vec = []
 test_loss = []
-for i in range(1800):
+for i in range(5000):
     #rand_index = np.random.choice(len(x_vals), size=batch_size)
     index = list(range(len(x_vals)))
     random.shuffle(index)
@@ -105,7 +105,7 @@ for i in range(len(x_test), len(x)):
     # print('  y = ' + str(y[i]))
     # print('  guess = ' + str(results[0][0][0]))
     # print('  loss = ' + str(results[1][0]))
-    error += (y[i] - results[0][0][0])**2
+    error += ((results[0][0][0] - y[i]))**2
 print('\nError = ' + str(error / (len(x) - len(x_test))))
 
 #Save the model
