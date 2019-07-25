@@ -8,7 +8,7 @@ len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);
 %Finding the length of each segment 
-segmentCalc = floor(stopCalc / segments);
+segmentCalc = round(stopCalc / segments);
 intervalStations = [];
 intervalStationCount = 0;
 
@@ -38,19 +38,17 @@ for position = 1:stopCalc
           end
           lastStation = position;
     end
-    if (mod(position,segmentCalc) == 0)
+    if (mod(position,segmentCalc) == 0 && length(intervalStations) < segments ...
+            || (position == stopCalc && length(intervalStations) < segments))
         intervalStations = [intervalStations intervalStationCount];
         intervalStationCount = 0;
     end
-    if (position == stopCalc)
+    if (position == stopCalc && length(intervalStations) >= segments)
         intervalStations(segments)= intervalStations(segments) + ...
                                      intervalStationCount;
     end
 end
 
-
-k = round((stopSecretary - stopCalc)/est);
-stationsToPass = stoppingEq(k);
 stationRates = [];
 
 %Run the secretary problem

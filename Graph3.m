@@ -13,6 +13,9 @@ stoppingEq =  @(x) round(sqrt(x));
 %Number of synthetic or real highways you want/have
 numSim = 500;
 
+successes = 0;
+total = 0;
+
 %          k                 lam                sim#
 rates(1:length(kValues),1:length(densities),1:numSim) = 10;
 starts(1:length(kValues),1:length(densities),1:numSim) = 10;
@@ -25,13 +28,23 @@ for simNum = 1:numSim
         highway = construct(densities(i), 1000);
         %highway = reallife("Trip" + simNum + ".csv");
         
+        sorted = sort(highway(highway > 0));
+        goal = sorted(round(length(sorted) * 0.2));
+        
         for k = 1:length(kValues)
             %fprintf("k: %d, density: %d", kValues(k), densities(i));
             [rates(k,i, simNum), starts(k, i, simNum), stops(k,i, simNum)] ...
                 = SGAS3(highway, kValues(k), stoppingEq, numDev, 0.75);
+            
+            if(rates(k,i, simNum) <= goal && rates(k,i, simNum) > 0)
+                    successes = successes + 1;
+                end
+                total = total + 1;
         end
     end
 end
+
+display(successes / total)
 
 avgPrice(1:length(kValues), 1:length(densities)) = 50;
 for i = 1:length(kValues)

@@ -30,9 +30,12 @@ for position = 1:stopCalc
     end
 end
 
-k = round((stopSecretary - stopCalc)/est);
+if(stopCalc > 0); k = round((est*(stopSecretary - stopCalc))/(stopCalc)); else; k = 1; end
 %temp = highway(stopCalc:stopSecretary);
 %disp(k - length(temp(temp > 0)))
+
+%k = length(temp(temp > 0));
+
 stationsToPass = stoppingEq(k);
 stationRates = [];
 
