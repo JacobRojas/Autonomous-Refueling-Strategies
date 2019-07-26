@@ -7,6 +7,12 @@ function [rate, stop] = SGAS5(highway, stoppingEq, ...
 %Secretary Solution assuming k gas stations 3) Critical: Stops at the first
 %available Gas Station.
 
+%Model with Loss=80.374626 TestLoss=44.139317 Error=71.78995685604697
+%NumSegments = 10
+%A = [1.59040   1.92435  -0.80867  -0.16671   1.04729  -0.63408   0.57891   0.47217   2.53032   1.66596   0.38587  -0.92485]
+%b = 12.219927
+%k = A * x' + b
+
 len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);

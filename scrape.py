@@ -12,15 +12,22 @@ for i in range(1, len(sys.argv)):
 	html = BeautifulSoup(raw, 'html.parser')
 	html = html.find(id="steps")
 
+	distance = 1
+
 	for listItem in html.select('div'):
 		if 'row' in listItem['class']:
 			if listItem.a == None:
 				for d in listItem.div.div.select('div'):
 					if 'stationInfo' in d['class']:
 						#print(d.b.text)
-						file.write("1,0\n")
+						distance += 1
 			else:
 				for d in listItem.a.div.div.select('div'):
 					if 'fuelPrice' in d['class']:
 						#print([x.strip() for x in d.text.split('\n') if x][0])
-						file.write('1,' + [x.strip() for x in d.text.split('\n') if x][0] + '\n')
+						if(distance > 100):
+							print(sys.argv[i])
+						file.write(str(distance) + ',' + [x.strip() for x in d.text.split('\n') if x][0] + '\n')
+						distance = 1
+	if(distance > 1):
+		file.write(str(distance - 1) + ',0\n')
