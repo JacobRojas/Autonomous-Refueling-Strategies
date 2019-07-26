@@ -3,16 +3,16 @@ function [rate, stop] = ML(highway, stoppingEq, ...
 %Run SGAS5 with the machine learning / data mining estimator for k
 segments = 10;
 
-%Model with Loss=80.374626 TestLoss=44.139317 Error=71.78995685604697
+%Model with Loss=80.374 TestLoss=44.139 Error=71.789
 %Stats from alpha=0.875 beta=0.75 startSecretary=0.6 startCritical=0.85 intervals=10
 %NumSegments = 10
 %A = [1.59040   1.92435  -0.80867  -0.16671   1.04729  -0.63408   0.57891   0.47217   2.53032   1.66596   0.38587  -0.92485];
 %b = 12.219927;
 
-%Model with  Loss=71.03162 Test=43.095203 Error=64.93993026180149
+%Model with  Loss=71.031 TestLoss=43.095 Error=64.939
 %Stats from alpha=0.875 beta=0.75 startSecretary=0.55 startCritical=0.8 intervals=10
-A = [1.9026456e+00  7.3775005e-01  1.2414066e-06 -2.0269197e-01  5.6631085e-02  4.5237908e-01 -6.7727196e-05  9.0136755e-01  1.2495881e+00  3.5226269e+00  4.8628077e-01 -1.2678128e+00]
-b = 12.347133
+A = [1.9026456e+00  7.3775005e-01  1.2414066e-06 -2.0269197e-01  5.6631085e-02  4.5237908e-01 -6.7727196e-05  9.0136755e-01  1.2495881e+00  3.5226269e+00  4.8628077e-01 -1.2678128e+00];
+b = 12.347133;
 
 
 len = length(highway);

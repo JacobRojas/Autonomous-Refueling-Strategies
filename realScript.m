@@ -2,7 +2,7 @@ stoppingEq =  @(x) round(sqrt(x));
 
 alpha = 0.875;
 beta = 0.75;
-startSecretary = 0.55;
+startSecretary = 0.45;
 startCritical = 0.8;
 intervals = 10;
 
