@@ -1,14 +1,13 @@
 function [] = SGAS5_Stats(highway, stoppingEq, ...
-    alpha, beta, percentCalc, percentSecretary, segments)
+    alpha, beta, percentCalc, percentSecretary, segments, fileID)
 %Collects stats for machine learning.
 %Format: n(0-percentCalc), highwayLength, EstDev, n(percentCalc-percentSecretary)
-fileID = fopen('realStats.csv', 'a');
 
 len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);
 %Finding the length of each segment 
-segmentCalc = round(stopCalc / segments);
+segmentCalc = floor(stopCalc / segments);
 intervalStations = [];
 intervalStationCount = 0;
 
@@ -59,5 +58,4 @@ for position = stopCalc:stopSecretary
 end
 
 fprintf(fileID, printFormat, intervalStations, len, dev, length(stationRates));
-fclose(fileID);
 
