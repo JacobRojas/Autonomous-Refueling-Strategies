@@ -20,6 +20,15 @@ for line in file:
 	y.append(data[-1])
 
 
+#Shuffle Data
+index = list(range(len(x)))
+random.shuffle(index)
+index = np.array(index)
+x = np.array(x)
+y = np.array(y)
+x = x[index]
+y = y[index]
+
 #Now we will load the data. This time, each element of x data 
 #will be a list of three values instead of one. Use the following code:
 # iris = datasets.load_iris()
@@ -28,11 +37,11 @@ for line in file:
 
 split = math.floor(len(x) * 0.75)
 
-x_vals = np.array(x[:split])
-y_vals = np.array(y[:split])
+x_vals = x[:split]
+y_vals = y[:split]
 
-x_test = np.array(x[split:])
-y_test = np.array(y[split:])
+x_test = x[split:]
+y_test = y[split:]
 
 dim = len(x_vals[0])
 
@@ -42,7 +51,7 @@ print("Testing Set = " + str(len(x_test)))
 #Next we declare the batch size, placeholders, variables, and model output.
 #The only difference here is that we change the size specifications of the 
 #x data placeholder to take three values instead of one, as follows:
-batch_size = math.floor(len(x_vals))
+batch_size = math.floor(len(x_vals) * 1)
 test_size = len(x_test)
 learning_rate = 0.00055
 x_data = tf.placeholder(shape=[None, dim], dtype=tf.float32)
@@ -69,7 +78,7 @@ my_opt = tf.train.GradientDescentOptimizer(learning_rate)
 train_step = my_opt.minimize(loss)
 loss_vec = []
 test_loss = []
-for i in range(5000):
+for i in range(4000):
     #rand_index = np.random.choice(len(x_vals), size=batch_size)
     index = list(range(len(x_vals)))
     random.shuffle(index)
