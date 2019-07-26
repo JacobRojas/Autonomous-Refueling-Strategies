@@ -2,8 +2,8 @@ stoppingEq =  @(x) round(sqrt(x));
 
 alpha = 0.875;
 beta = 0.75;
-startSecretary = 0.6;
-startCritical = 0.85;
+startSecretary = 0.55;
+startCritical = 0.8;
 intervals = 10;
 
 delete realStats.csv

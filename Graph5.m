@@ -8,8 +8,8 @@ stoppingEq =  @(x) round(sqrt(x));
 
 alpha = 0.875;
 beta = 0.75;
-startSecretary = 0.4:0.05:0.7;
-startCritical = 0.8:0.025:0.9;
+startSecretary = 0.6;
+startCritical = 0.8;
 
 %Number of real highways you have
 numSim = 151;
@@ -33,6 +33,10 @@ for simNum = 1:numSim
                     startSecretary(i), startCritical(j));
                 if(rates(i, j, simNum) <= goal && rates(i, j, simNum) > 0)
                     successes = successes + 1;
+                    %Graph success rate instead of gas rate
+                    rates(i, j, simNum) = 1;
+                else
+                    rates(i, j, simNum) = 0;
                 end
                 total = total + 1;
             end
@@ -46,8 +50,8 @@ avgStop(1:length(startSecretary), 1:length(startCritical)) = 100;
 avgRunOutOfGas(1:length(startSecretary), 1:length(startCritical)) = 100;
 for i = 1:length(startSecretary)
     for j = 1:length(startCritical)
-        avgRate(i, j) = sum(rates(i, j, rates(i, j, : ) > 0))...
-            / length(rates(i, j, rates(i, j, : ) > 0));
+        avgRate(i, j) = sum(rates(i, j, rates(i, j, : ) >= 0))...
+            / length(rates(i, j, rates(i, j, : ) >= 0));
         avgStop(i, j) = sum(stops(i, j, stops(i, j, : ) > 0))...
             / length(stops(i, j, stops(i, j, : ) > 0));
         avgRunOutOfGas(i, j) = -sum(rates(i, j, rates(i, j, : ) < 0))...

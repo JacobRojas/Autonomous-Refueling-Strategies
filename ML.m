@@ -1,16 +1,21 @@
-function [rate, stop] = SGAS5(highway, stoppingEq, ...
+function [rate, stop] = ML(highway, stoppingEq, ...
     alpha, beta, percentCalc, percentSecretary)
-%New solution separtes range of car into 3 sections: Density Observation,
-%Secretary Solution, and Critical. 1) Density Observation: Uses TCP RTO
-%calculations to estimate how many k gast stations will be seen in the
-%Secretary section of the car's range. 2) Secretary Solution: Runs the
-%Secretary Solution assuming k gas stations 3) Critical: Stops at the first
-%available Gas Station.
+%Run SGAS5 with the machine learning / data mining estimator for k
+segments = 10;
+
+%Model with Loss=80.374626 TestLoss=44.139317 Error=71.78995685604697
+%NumSegments = 10
+A = [1.59040   1.92435  -0.80867  -0.16671   1.04729  -0.63408   0.57891   0.47217   2.53032   1.66596   0.38587  -0.92485];
+b = 12.219927;
+%k = A * x' + b;
 
 len = length(highway);
 stopCalc = floor(len * percentCalc);
 stopSecretary = floor(len * percentSecretary);
-
+%Finding the length of each segment 
+segmentCalc = floor(stopCalc / segments);
+intervalStations = [];
+intervalStationCount = 0;
 
 gasStations = 0;
 lastStation = 0;
@@ -20,6 +25,7 @@ est = 0;
 for position = 1:stopCalc
     if highway(position) ~= 0
           gasStations = gasStations + 1;
+          intervalStationCount = intervalStationCount + 1;
           if(gasStations == 1)
               est = position;
           else
@@ -28,13 +34,19 @@ for position = 1:stopCalc
           end
           lastStation = position;
     end
+    if (mod(position,segmentCalc) == 0 && length(intervalStations) < segments ...
+            || (position == stopCalc && length(intervalStations) < segments))
+        intervalStations = [intervalStations intervalStationCount];
+        intervalStationCount = 0;
+    end
+    if (position == stopCalc && length(intervalStations) >= segments)
+        intervalStations(segments)= intervalStations(segments) + ...
+                                     intervalStationCount;
+    end
 end
 
-if(stopCalc > 0); k = round((est*(stopSecretary - stopCalc))/(stopCalc)); else; k = 1; end
-%temp = highway(stopCalc:stopSecretary);
-%disp(k - length(temp(temp > 0)))
-
-%k = length(temp(temp > 0));
+x = [intervalStations len dev];
+k = A * x' + b;
 
 stationsToPass = stoppingEq(k);
 stationRates = [];
@@ -73,3 +85,4 @@ end
 stop = -1;
 rate = -1;
 return
+end
