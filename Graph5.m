@@ -8,7 +8,7 @@ stoppingEq =  @(x) round(sqrt(x));
 
 alpha = 0.875;
 beta = 0.75;
-startSecretary = 0.4;
+startSecretary = 0.4:0.05:0.75;
 startCritical = 0.8;
 
 %Number of real highways you have
@@ -43,7 +43,7 @@ for simNum = 1:numSim
         end
 end
 
-display(successes / total)
+%display(successes / total)
 
 avgRate(1:length(startSecretary), 1:length(startCritical)) = 100;
 avgStop(1:length(startSecretary), 1:length(startCritical)) = 100;
