@@ -50,7 +50,7 @@ end
 
 stationRates = [];
 
-%Run the secretary problem
+%Collecting number of gas stations in secretary section
 for position = stopCalc:stopSecretary
     if highway(position) ~= 0
         stationRates = [stationRates highway(position)];
