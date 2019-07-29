@@ -65,7 +65,7 @@ subplot(2, 3, 1);
 stem(startSecretary, mean(avgRate, 2), 'Color', [1 0 0]);
 ylim([(min(mean(avgRate, 1))-0.05) (max(mean(avgRate, 2))+0.05)]);
 %xticks(alpha);
-ylabel("Avg. Gas Price");
+ylabel("Success Rate");
 xlabel("Start of Secretary");
 %title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
 set(gca,'color','none')
@@ -75,17 +75,17 @@ subplot(2, 3, 2);
 stem(startSecretary, mean(avgRunOutOfGas, 2), 'Color', [1 0 0]);
 ylim([0 max(mean(avgRunOutOfGas, 2))+0.05]);
 %xticks(alpha);
-ylabel("% ran out of gas");
+ylabel("Rate Ran Out of Gas");
 xlabel("Start of Secretary");
 %title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
 set(gca,'color','none')
 set(gca,'XColor',axisColor,'YColor',axisColor)
 
 subplot(2, 3, 3);
-stem(startSecretary, mean(avgStop, 2), 'Color', [0 0 1]);
+stem(startSecretary, mean(avgStop, 2), 'Color', [1 0 0]);
 ylim([0.5 max(mean(avgStop, 2))+0.1]);
 %xticks(alpha);
-ylabel("% highway before stop");
+ylabel("Fraction of Highway at Stop");
 xlabel("Start of Secretary");
 %title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
 set(gca,'color','none')
@@ -95,7 +95,7 @@ subplot(2, 3, 4);
 stem(startCritical, mean(avgRate, 1), 'Color', [1 0 0]);
 ylim([(min(mean(avgRate, 1))-0.05) (max(mean(avgRate, 1))+0.05)]);
 %xticks(alpha);
-ylabel("Avg. Gas Price");
+ylabel("Success Rate");
 xlabel("Start of Critical");
 %title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
 set(gca,'color','none')
