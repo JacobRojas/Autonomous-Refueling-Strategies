@@ -30,7 +30,7 @@ for position = 1:stopCalc
     end
 end
 
-if(stopCalc > 0); k = round((est*(stopSecretary - stopCalc))/(stopCalc)); else; k = 1; end
+if(stopCalc > 0); k = round((gasStations*(stopSecretary - stopCalc))/(stopCalc)); else; k = 1; end
 
 %temp = highway(stopCalc:stopSecretary);
 %disp(k - length(temp(temp > 0)))

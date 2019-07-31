@@ -25,7 +25,7 @@ for i in range(1, len(sys.argv)):
 				for d in listItem.a.div.div.select('div'):
 					if 'fuelPrice' in d['class']:
 						#print([x.strip() for x in d.text.split('\n') if x][0])
-						if(distance > 100):
+						if(distance > 70):
 							print(sys.argv[i])
 						file.write(str(distance) + ',' + [x.strip() for x in d.text.split('\n') if x][0] + '\n')
 						distance = 1
