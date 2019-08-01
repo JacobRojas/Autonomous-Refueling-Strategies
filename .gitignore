@@ -10,3 +10,9 @@ altmany-export_fig-b1a7288/*
 *.ckpt.*
 checkpoint
 *.xlsx
+*.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.gz
