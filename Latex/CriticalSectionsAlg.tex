@@ -1,0 +1,33 @@
+\begin{figure}[!hbt]
+\vspace{0.2cm}
+\hrule \medskip \noindent {\bf Critical Sections: Solution to the GAS problem } \smallskip
+\hrule
+\smallskip
+\begin{algorithmic}[1]
+\STATE {\bf Inputs:} the total mileage $Total\_Mileage$ a vehicle can drive from a full tank until empty, the distance driven so far $Driven\_Mileage$, the length of the density observation section $Observation\_Length$, the length of the Secretary Solution section $Secretary\_Length$
+\STATE {\bf Output:} the gas station $j$ where the vehicle stops for gas
+\WHILE {$Driven\_Mileage < Observation\_Length$}
+\STATE Keep driving and observe the location of the gas stations in order to predict $k$ ($k$ will be predicted using either the algorithm in Figure~\ref{fig:tcp-est} or Figure~\ref{ml-est})
+\ENDWHILE \\
+$gas\_stations\_passed \gets 0$
+\WHILE {$Driven\_Mileage < Secretary\_Length$ $\AND$ $gas\_stations\_passed < k$}
+\STATE Keep driving and for every gas station that you pass, record the price of the gas station and increment $gas\_stations\_passed$ by one
+\ENDWHILE
+\WHILE {$Driven\_Mileage < Secretary\_Length$}
+\STATE Keep driving until you hit a gas station $j$
+\IF {Gas Station $j$ is cheaper than all $gas\_stations\_passed$ gas stations' prices}
+\STATE Stop and return gas station $j$
+\ELSE
+\STATE Keep driving and stop at the next gas station
+\ENDIF
+\ENDWHILE
+\WHILE {$Driven\_Mileage < Total\_Mileage$}
+\STATE Keep driving until you hit a gas station $j$
+\STATE Stop and return gas station $j$
+\ENDWHILE
+\STATE If you reach this point without returning a gas station $j$, then you have run out of gas
+\end{algorithmic}
+\hrule
+\caption{Our solution to the GAS problem}
+\label{fig:CriticalSectionsAlg}
+\end{figure}
