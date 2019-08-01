@@ -118,14 +118,23 @@ In this section, we define the problem we want to solve. We assume in a smart ci
 \begin{enumerate}
 \item A vehicle can observe sequentially a list of gas prices offered by the gas stations as it drives by on the highway.
 \item From the time the vehicle plans to add gas to the time it runs out of gas, the expected number of gas stations it encounters along the highway is $k$.
-\item The prices offered by the gas stations can be ranked from the lowest to the highest with no ties.
 \item For each gas station $j$, the vehicle can only ascertain the {\em relative rank} of the gas station relative to the previous $j-1$ viewed gas stations.
 \item Once the vehicle passes a gas station, it cannot later come back. If it reaches the point of running out of gas, the vehicle must add gas.
 \end{enumerate}
 
+In order to assess the quality of our solution, we set three metrics and ordered them by importance. With a good solution, the vehicle should:
+
+\begin{enumerate}
+\item Nearly never run out of gas
+\item Not stop for gas too soon
+\item Stop at a gas station with a relatively low price
+\end{enumerate}
+
+These metrics were chosen and given their respective priorities because this is generally how people decide whether to stop for gas. For example, most people will not stop for gas when they have 80\% of a tank left, even if they see a very low gas price. We want our solution to reflect this general order of priorities.
 
 
-\section{Our Solution - TCP solution}
+
+\section{Our Solution - TCP-inspired solution}
 {\color{red} In this section, you describe the TCP solution and write out the algorithm}
 
 \begin{equation}
