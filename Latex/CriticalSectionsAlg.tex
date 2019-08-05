@@ -10,7 +10,7 @@
 \STATE Keep driving and observe the location of the gas stations in order to predict $k$ ($k$ will be predicted using either the algorithm in Figure~\ref{fig:tcp-est} or Figure~\ref{ml-est})
 \ENDWHILE \\
 $gas\_stations\_passed \gets 0$
-\WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$ $\AND$ $gas\_stations\_passed < k$}
+\WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$ $\AND$ $gas\_stations\_passed < \sqrt{k}$}
 \STATE Keep driving and for every gas station that you pass, record the price of the gas station and increment $gas\_stations\_passed$ by one
 \ENDWHILE
 \WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$}
@@ -31,3 +31,16 @@ $gas\_stations\_passed \gets 0$
 \caption{Our solution to the GAS problem}
 \label{fig:CriticalSectionsAlg}
 \end{figure}
+
+In Figure~\ref{fig:CriticalSectionsAlg} we describe our general solution to the GAS problem. The main premise of the algorithm is to divide the total distance a car can drive into three sections:
+\begin{enumerate}
+\item Density Observation Section
+\item Secretary Problem Solution Section
+\item Critically Low Section
+\end{enumerate}
+
+In the first section, the density observation section, we will simply watch the frequency and distribution of gas stations that we pass. This information will later be used to estimate the total number of gas stations, $k$, that the vehicle will pass in the next section.
+
+In the next section, the secretary problem solution section, we first pass $\sqrt{k}$ gas stations and record their prices. After we have passed $\sqrt{k}$ gas stations, we will then stop at the first gas station with a price lower than all $\sqrt{k}$ gas stations that we passed.
+
+If we reach the last section, the critically low section, without stopping at a gas station, then we will stop at the first gas station that we pass in this critically low section.
