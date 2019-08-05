@@ -10,10 +10,10 @@
 \STATE Keep driving and observe the location of the gas stations in order to predict $k$ ($k$ will be predicted using either the algorithm in Figure~\ref{fig:tcp-est} or Figure~\ref{ml-est})
 \ENDWHILE \\
 $gas\_stations\_passed \gets 0$
-\WHILE {$Driven\_Mileage < Secretary\_Length$ $\AND$ $gas\_stations\_passed < k$}
+\WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$ $\AND$ $gas\_stations\_passed < k$}
 \STATE Keep driving and for every gas station that you pass, record the price of the gas station and increment $gas\_stations\_passed$ by one
 \ENDWHILE
-\WHILE {$Driven\_Mileage < Secretary\_Length$}
+\WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$}
 \STATE Keep driving until you hit a gas station $j$
 \IF {Gas Station $j$ is cheaper than all $gas\_stations\_passed$ gas stations' prices}
 \STATE Stop and return gas station $j$
