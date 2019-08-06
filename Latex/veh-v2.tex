@@ -33,7 +33,7 @@
 
 \begin{document}
 
-\title{Autonomous Refueling Strategies using Vehicle-to-Infrastructure Communication in Smart Cities }
+\title{Auto Gas Adding using Vehicle-to-Infrastructure Communication in Smart Cities }
 
 \author{
 % Your names and contact info \\
@@ -54,8 +54,6 @@
 % ------------------------------------------------------------------------------------------------- Introduction
 \vspace{-0.3cm}
 \section{Introduction}
-{\color{red} You write this part the last after you finish the rest of the sections.}
-
 Intelligent Transportation Systems (ITS) \cite{Alam2016} is one of the major structures in building a safe, secure, and efficient smart city \cite{Bowerman2000}. It has noticed particular development in recent years thanks to the emergence of vehicular networks as a result of advancements in intelligent systems, wireless technologies, ad-hoc networking, and the automobile industry. Vehicular networks are formed among moving vehicles, road side units (RSUs), and pedestrians that carry communication devices. They can be deployed in rural, urban, and highway environments.  There are three main scenarios for vehicular communication: vehicle-to-vehicle (V2V), vehicle-to-infrastructure (V2I), and vehicle-to-pedestrian (V2P) \cite{Tseng2015}. Among these, V2I technologies capture vehicle-generated traffic data, wirelessly providing information such as advisories from the infrastructure to the vehicle that inform the driver of safety, mobility, or environment related conditions. State and local agencies are likely to install V2I infrastructure alongside or integrated with existing ITS equipment.
 
 Recently, self-driving vehicles have attracted tremendous attention from all walks of life. The IEEE researchers predict that self-driving vehicles will comprise $75\%$ of total traffic on the road by the year $2040$ \cite{IEEEPrediction}.  Self-driving vehicles will provide tremendous benefits to society in terms of convenience and quality of life. Such vehicles will provide unprecedented access to transportation to those who need it most and those with limited access to public transportation. They will make road safer by reducing human errors and allow the driver to do something more productive. These benefits will not be realized unless vehicles are truly autonomous. At this technology level, the driver hands over control to the vehicle and the driver is no longer responsible for monitoring the system.  This will mean that the vehicle will be able to handle all situations that may occur on the road.
@@ -91,6 +89,7 @@ The rest of the paper is organized as follows: Section \ref{related} references 
 \subsection{Classic Secretary Problem}
 In the classic secretary problem (CSP) \cite{CSP}, a DM wants to hire the best secretary out of $n$ rankable applicants for a position. The applicants are interviewed one by one in a random order.  When the DM interviews the $j$th applicant in the sequence, she gains information sufficient to rank the applicant among all applicants interviewed so far, but is unaware of the quality of yet unseen applicants.   Her objective is to find an optimal strategy or the stopping rule to maximize the probability of selecting the best applicant. The CSP can be formally stated below:
 
+
 \begin{enumerate}
 \item  There is a fixed and known number $n$ of applicants who can be ranked from the best $1$ to the worst $n$ without a tie competing for a single position.
 \item The applicants are interviewed sequentially in a random order (with a total of $n!$ orderings with equal probability).
@@ -110,49 +109,18 @@ The cutoff $t^{*}$ converges to $\frac {n}{e}$, where $e$ is the base of the nat
 Using the classic secretary problem rewards a payoff of 1 for selecting the applicant with the absolute rank of 1 out of $n$ applicants. In the case of stopping for gas, we believe that a driver should be rewarded for stopping at a location which saves money, not only rewarded if the gas station is the lowest of $n$ stations. Using a variation of the classic secretary problem with cardinal payoff, the stopping point moves from $\frac{n}{e}$ to $\sqrt{n}$ \cite{ferenstein:hal-00602313}.
 
 \section{Problem Statement} \label{problem}
-{\color{red} Change this part saying that our goal is to satisfy three conditions:
-1. Not to run out of gas 2. Not to start too early 3. Price as low as possible }
-
 In this section, we define the problem we want to solve. We assume in a smart city, self-driving vehicles need to find the best strategy to add gas. A self-driving vehicle is driving on the highway. When it comes close to a gas station, the OBU in the vehicle and the RSU at the gas station can communicate with each other and the gas price at the gas station can be transmitted to the vehicle. When the vehicle gets the price, it learns the price of the gas station relative to those previously seen. The vehicle expects to compare at most $k$ gas stations from the time it wants to add gas to the time it runs out of gas. The objective of the vehicle is to select the gas station which offers the lowest price over all those have been seen and those not-yet-seen before it runs out of gas. We call this problem the gas-adding-strategy (GAS) problem. The conditions in this problem can be formally stated as follows:
 
 \begin{enumerate}
 \item A vehicle can observe sequentially a list of gas prices offered by the gas stations as it drives by on the highway.
 \item From the time the vehicle plans to add gas to the time it runs out of gas, the expected number of gas stations it encounters along the highway is $k$.
+\item The prices offered by the gas stations can be ranked from the lowest to the highest with no ties.
 \item For each gas station $j$, the vehicle can only ascertain the {\em relative rank} of the gas station relative to the previous $j-1$ viewed gas stations.
 \item Once the vehicle passes a gas station, it cannot later come back. If it reaches the point of running out of gas, the vehicle must add gas.
 \end{enumerate}
 
-In order to assess the quality of our solution, we set three metrics and ordered them by importance. With a good solution, the vehicle should:
 
-\begin{enumerate}
-\item Nearly never run out of gas
-\item Not stop for gas too soon
-\item Stop at a gas station with a relatively low price
-\end{enumerate}
-
-These metrics were chosen and given their respective priorities because this is generally how people decide whether to stop for gas. For example, most people will not stop for gas when they have 80\% of a tank left, even if they see a very low gas price. We want our solution to reflect this general order of priorities.
-
-
-
-\section{Our Solution - TCP-inspired solution}
-{\color{red} In this section, you describe the TCP solution and write out the algorithm}
-
-\begin{equation}
-EstRTT = (1-\alpha)\times EstRTT + \alpha \times SampleRTT
-\end{equation}
-
-\begin{equation}
-DevRTT = (1-\beta)\times DevRTT + \beta \times \mid SampleRTT - EstRTT \mid
-\end{equation}
-
-\begin{equation}
-RTO = EstRTT + 4\times DevRTT
-\end{equation}
-
-\section{Our Solution - DM solution}
-{\color{red} In this section, you describe the DM solution and write out the algorithm}
-
-
+\section{Our Solution SGAS}
 In this section, we present our solution SGAS to the GAS problem. SGAS has two parts. The first part is to find the starting rule for the vehicle to start looking for the gas stations so that there is a maximum probability that the expected number of the gas stations ahead is $k$ before the vehicle runs out of gas. Once the first part can be decided, the second part is to use the optimal stopping rule of the CSP to let the vehicle stop at the gas station that has the best chance to offer the lowest gas price.
 
 As mentioned in the introduction section, our focus in this section is to find the starting rule. Since the starting rule is related to the distribution of the gas stations, we will discuss a practical distribution: the Poisson distribution in the following paragraphs.
@@ -267,7 +235,7 @@ The whole solution SGAS is presented in Fig. \ref{SGAS}.
 \STATE Keep driving and count the number of gas stations every $d$ miles to estimate density $\lambda$ using Equation (\ref{lambda})
 \ENDWHILE
 \IF {$Total\_Mileage - Driven\_Mileage == \tau$}
-\STATE start to compare the prices at encountered gas stations and pass $\lceil\frac{k}{e}\rceil$ of them
+\STATE start to compare the prices at encountered gas stations and pass {$^*Stopping\ Rule$} of them
 \ENDIF
 \STATE $j = \lceil\frac{k}{e}\rceil + 1$
 \WHILE {the warning light is not on and gas station $j$ does not offer the lowest price compared so far }
@@ -276,52 +244,48 @@ The whole solution SGAS is presented in Fig. \ref{SGAS}.
 \STATE add gas at station $j$;
 \end{algorithmic}
 \hrule
-\caption{The solution to the GAS problem}
+\caption{The solution to the GAS problem\newline Stopping Rule for CSP = k / e \newline cardinal = sqrt(k)}
 \label{SGAS}
 \end{figure}
 
-The main idea of the SGAS algorithm is as follows: the vehicle will keep driving and counting the number of gas stations encountered every $d$ miles. In this way, the vehicle can calculate the density $\lambda$ using Equation (\ref{lambda}). If $\lambda$ is known, $\tau$ can be calculated also. If the difference between the total mileage the vehicle can drive with a full tank and the mileage driven so far is equal to $\tau$, the vehicle can start comparing the gas prices offered by the encountered gas stations. According to the optimal stopping rule, the vehicle will pass the first $\frac{k}{e}$ gas stations. In our context, the number of gas stations can only be integers. We take the ceiling of $\frac{k}{e}$. So the vehicle will pass $\lceil\frac{k}{e}\rceil$ gas stations. Then the vehicle will add gas at the first gas station that offers the lowest price compared so far or the gas station where the vehicle has the warning light on.
+\begin{equation}
+EstRTT = (1-\alpha)\times EstRTT + \alpha \times SampleRTT
+\end{equation}
 
+\begin{equation}
+DevRTT = (1-\beta)\times DevRTT + \beta \times \mid SampleRTT - EstRTT \mid
+\end{equation}
+
+\begin{equation}
+RTO = EstRTT + 4\times DevRTT
+\end{equation}
+
+
+The main idea of the SGAS algorithm is as follows: the vehicle will keep driving and counting the number of gas stations encountered every $d$ miles. In this way, the vehicle can calculate the density $\lambda$ using Equation (\ref{lambda}). If $\lambda$ is known, $\tau$ can be calculated also. If the difference between the total mileage the vehicle can drive with a full tank and the mileage driven so far is equal to $\tau$, the vehicle can start comparing the gas prices offered by the encountered gas stations. According to the optimal stopping rule, the vehicle will pass the first $\frac{k}{e}$ gas stations. In our context, the number of gas stations can only be integers. We take the ceiling of $\frac{k}{e}$. So the vehicle will pass $\lceil\frac{k}{e}\rceil$ gas stations. Then the vehicle will add gas at the first gas station that offers the lowest price compared so far or the gas station where the vehicle has the warning light on.
+\section{Methodology}
+\subsection{Data Collection}
+We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 m away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. We used GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank on a one way trip. This effectively captures gas station information every 0.5 miles along a route. We selected routes in between 300 and 500 miles to represent how far a vehicle could drive on a full tank of gas. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 151 Routes across the United States to test our refueling algorithms. These routes were captured as matrices in Matlab with each index representing a unit distance and the element in each index being the price of gas at that location, a value of zero was used if no gas station was present. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain locations along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
 %\vspace{-0.3cm}
 \section{Simulations} \label{simulations}
-In this section, we evaluate the effectiveness of our solutions by comparing them with the ground truth using a custom simulator written in ....
+In this section, we evaluate the effectiveness of our solution SGAS by comparing it with other schemes using a custom simulator written in Matlab.
 
 \subsection{Algorithms Compared}
 \begin{enumerate}
-\item {\em The TPC solution} (..): our proposed TPC solution to the GAS problem.
-\item {\em The DM algorithm} (DM):  ...
-\item {\em Ground truth}: ...
+\item {\em The SGAS} (SGAS): using the classic secretary approach.
+\item {\em The SGAS} (SGAS): using the secretary solution with cardinal payoffs.
+\item {\em TCP/RTO}: Using retransmission timeout protocols to model deviation between gas station location.
+\item {\em Machine Learning}: using ML algorithms to predict gas station density.
+\item {\em The last minute algorithm} (LastMinute):  the vehicle will stop at the first gas station it encounters when the warning light is on.
+
 \end{enumerate}
 
-\subsection{Metric}
-{\color{red} percentage of running out of gas}
-
-If a vehicle decides to compare the prices from $k$ gas stations, we calculate the {\em success ratio} of the vehicle eventually adding gas at the gas station that offers the lowest price among the $k$ gas stations.
-
-{\color{red} starting point}
-
-\subsection{Synthetic Data}
-{\color{red} In this part, you conduct the simulations using the synthetic data
-
-\subsubsection{Data Generation}
-How did you generate the synthetic data?
-
-\subsubsection{Setting}
-
-\subsubsection{Results}
-You present the simulation results for the above three parameters using the three algorithms and the synthetic data. You analyze the data and draw conclusions. }
-
-
-\subsection{Real Data}
-
-\subsubsection{Data Collection}
-We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 m away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. In an attempt to automate the slow process of collecting data, map APIs Mapbox and Google Maps were explored. Ultimately, these methods were unsuccessful due to either inaccurate data of missing gas stations or lack of retrievable gas rate information. The fastest way to collect data is using GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank. This effectively captures gas station information every 0.5 miles along a route. For the purposes of simulation we selected routes in between 300 and 500 miles. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 150?? Routes across the United States to test our refueling algorithms. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain places along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
-
-\subsubsection{Setting}
-{\color{red} In this section, you describe how you set the parameters}
-
+\subsection{Setting Gas Stations}
 We assume that the vehicle is driving on a highway with a length of $L$. For each unit length on the highway,  we rely on a random number generator to generate a number $x$ between $1$ and $100$. If $x \leq 100\lambda$, we set a gas station at that location. After this process, the density of gas stations along the highway is $\lambda$.
 
+\subsection{Metric}
+If a vehicle decides to compare the prices from $k$ gas stations, we calculate the {\em success ratio} of the vehicle eventually adding gas at the gas station that offers the lowest price among the $k$ gas stations.
+
+\subsection{Setting}
 We set the highway length $L$ to be $500$ miles.
 
 To estimate $\lambda$, the vehicle starts to count the number of gas stations every $d$ miles and estimate  density $\lambda$ using Equation (\ref{lambda}). We set $d$ from $50$ to $80$ miles with a step of $10$.
@@ -330,9 +294,7 @@ We set the number of gas stations that a vehicle wants to compare $k$ to $5, 6$,
 
 We randomly generate a gas price per gallon for each station with two digits after the decimal point from the range $[2, 4]$.
 
-\subsubsection{Results}
-{\color{red} You present the simulation results for the above three parameters using the three algorithms and the real data. You analyze the data and draw conclusions.}
-
+\subsection{Results}
 Fig. \ref{figk5}: $k=5$, horizontal axis: $d$ from $50$ to $80$ miles with a step of $10$. Vertical axis: success ratio.
 
 Fig. \ref{figk6}: $k=6$, horizontal axis: $d$ from $50$ to $80$ miles with a step of $10$. Vertical axis: success ratio.
