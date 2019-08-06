@@ -268,9 +268,9 @@ The whole solution SGAS is presented in Fig. \ref{SGAS}.
 \STATE Keep driving and count the number of gas stations every $d$ miles to estimate density $\lambda$ using Equation (\ref{lambda})
 \ENDWHILE
 \IF {$Total\_Mileage - Driven\_Mileage == \tau$}
-\STATE start to compare the prices at encountered gas stations and pass $\lceil\frac{k}{e}\rceil$ of them
+\STATE start to compare the prices at encountered gas stations and pass $\lceil\sqrt{k}\rceil$ of them
 \ENDIF
-\STATE $j = \lceil\frac{k}{e}\rceil + 1$
+\STATE $j = \lceil\sqrt{k}\rceil + 1$
 \WHILE {the warning light is not on and gas station $j$ does not offer the lowest price compared so far }
 \STATE drive to the next gas station; $j = j+1$
 \ENDWHILE
@@ -281,7 +281,7 @@ The whole solution SGAS is presented in Fig. \ref{SGAS}.
 \label{SGAS}
 \end{figure}
 
-The main idea of the SGAS algorithm is as follows: the vehicle will keep driving and counting the number of gas stations encountered every $d$ miles. In this way, the vehicle can calculate the density $\lambda$ using Equation (\ref{lambda}). If $\lambda$ is known, $\tau$ can be calculated also. If the difference between the total mileage the vehicle can drive with a full tank and the mileage driven so far is equal to $\tau$, the vehicle can start comparing the gas prices offered by the encountered gas stations. According to the optimal stopping rule, the vehicle will pass the first $\frac{k}{e}$ gas stations. In our context, the number of gas stations can only be integers. We take the ceiling of $\frac{k}{e}$. So the vehicle will pass $\lceil\frac{k}{e}\rceil$ gas stations. Then the vehicle will add gas at the first gas station that offers the lowest price compared so far or the gas station where the vehicle has the warning light on.
+The main idea of the SGAS algorithm is as follows: the vehicle will keep driving and counting the number of gas stations encountered every $d$ miles. In this way, the vehicle can calculate the density $\lambda$ using Equation (\ref{lambda}). If $\lambda$ is known, $\tau$ can be calculated also. If the difference between the total mileage the vehicle can drive with a full tank and the mileage driven so far is equal to $\tau$, the vehicle can start comparing the gas prices offered by the encountered gas stations. According to the optimal stopping rule, the vehicle will pass the first $\sqrt{k}$ gas stations. In our context, the number of gas stations can only be integers. We take the ceiling of $\sqrt{k}$. So the vehicle will pass $\lceil\sqrt{k}\rceil$ gas stations. Then the vehicle will add gas at the first gas station that offers the lowest price compared so far or the gas station where the vehicle has the warning light on.
 
 %\vspace{-0.3cm}
 \section{Simulations} \label{simulations}
@@ -302,24 +302,9 @@ If a vehicle decides to compare the prices from $k$ gas stations, we calculate t
 {\color{red} starting point}
 
 \subsection{Synthetic Data}
-{\color{red} In this part, you conduct the simulations using the synthetic data
+{\color{red} In this part, you conduct the simulations using the synthetic data}
 
 \subsubsection{Data Generation}
-How did you generate the synthetic data?
-
-\subsubsection{Setting}
-
-\subsubsection{Results}
-You present the simulation results for the above three parameters using the three algorithms and the synthetic data. You analyze the data and draw conclusions. }
-
-
-\subsection{Real Data}
-
-\subsubsection{Data Collection}
-We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 m away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. We used GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank on a one way trip. This effectively captures gas station information every 0.5 miles along a route. We selected routes in between 300 and 500 miles to represent how far a vehicle could drive on a full tank of gas. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 151 Routes across the United States to test our refueling algorithms. These routes were captured as matrices in Matlab with each index representing a unit distance and the element in each index being the price of gas at that location, a value of zero was used if no gas station was present. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain locations along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
-
-\subsubsection{Setting}
-{\color{red} In this section, you describe how you set the parameters}
 
 We assume that the vehicle is driving on a highway with a length of $L$. For each unit length on the highway,  we rely on a random number generator to generate a number $x$ between $1$ and $100$. If $x \leq 100\lambda$, we set a gas station at that location. After this process, the density of gas stations along the highway is $\lambda$.
 
@@ -330,6 +315,18 @@ To estimate $\lambda$, the vehicle starts to count the number of gas stations ev
 We set the number of gas stations that a vehicle wants to compare $k$ to $5, 6$, and $8$.
 
 We randomly generate a gas price per gallon for each station with two digits after the decimal point from the range $[2, 4]$.
+
+\subsubsection{Setting}
+
+\subsubsection{Results}
+You present the simulation results for the above three parameters using the three algorithms and the synthetic data. You analyze the data and draw conclusions. 
+
+
+\subsection{Real Data}
+
+\subsubsection{Data Collection}
+We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 m away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. We used GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank on a one way trip. This effectively captures gas station information every 0.5 miles along a route. We selected routes in between 300 and 500 miles to represent how far a vehicle could drive on a full tank of gas. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 151 Routes across the United States to test our refueling algorithms. These routes were captured as matrices in Matlab with each index representing a unit distance and the element in each index being the price of gas at that location, a value of zero was used if no gas station was present. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain locations along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
+
 
 \subsubsection{Results}
 {\color{red} You present the simulation results for the above three parameters using the three algorithms and the real data. You analyze the data and draw conclusions.}
