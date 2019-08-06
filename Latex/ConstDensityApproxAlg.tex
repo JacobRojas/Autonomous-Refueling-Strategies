@@ -1,0 +1,22 @@
+\begin{figure}[!hbt]
+\vspace{0.2cm}
+\hrule \medskip \noindent {\bf Constant Density Approximation: First k-estimation method } \smallskip
+\hrule
+\smallskip
+\begin{algorithmic}[1]
+\STATE {\bf Inputs:} the distance driven so far $Driven\_Mileage$, the length of the density observation section $Observation\_Length$, the length of the Secretary Solution section $Secretary\_Length$
+\STATE {\bf Output:} a number $k$ that is an approximation of the number of gas stations in the Secretary Problem Solution Section
+$gas\_stations\_passed \gets 0$
+\WHILE {$Driven\_Mileage < Observation\_Length$}
+\STATE Drive to next gas station
+\STATE $gas\_stations\_passed \gets gas\_stations\_passed + 1$
+\ENDWHILE \\
+\STATE $k \gets (gas\_stations\_passed) * (Secretary\_Length) / (Observation\_Length)$ \label{alg:line:keq}
+\RETURN $k$
+\end{algorithmic}
+\hrule
+\caption{Our solution to the GAS problem}
+\label{fig:tcp-est}
+\end{figure}
+
+The main premise behind the Constant Density Approximation can be seen in line~\ref{alg:line:keq} of Figure~\ref{fig:tcp-est}. If we approximate that the density of the Secretary Problem Solution Section is the same as the density in the Density Observation Section, then the number of gas stations we see in the Secretary Problem Solution Section is equal to the number of gas stations in the Density Observation Section times the length of the Secretary Problem Solution Section divided by the length of the Density Observation Section.
