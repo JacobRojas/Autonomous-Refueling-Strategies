@@ -133,7 +133,13 @@ In order to assess the quality of our solution, we set three metrics and ordered
 These metrics were chosen and given their respective priorities because this is generally how people decide whether to stop for gas. For example, most people will not stop for gas when they have 80\% of a tank left, even if they see a very low gas price. We want our solution to reflect this general order of priorities.
 
 \section{Our Solution - Critical Sections}
-Based on optimizing the metrics laid out in the previous section, we designed a framework called Critical Sections. 
+Based on optimizing the metrics laid out in the previous section, we designed a framework called Critical Sections. This framework divides a highway into three sections:
+\begin{enumerate}
+    \item Density Approximation
+    \item Secretary Solution
+    \item Critical Stopping 
+\end{enumerate}
+The Density Approximation section is used to predict the number of gas stations, $k$, we expect to see in the second section. As the car drives along the highway it collects data that is used as input in either the Constant Density Approximation or machine learning model. The Secretary Solution section is the first section in which a vehicle is allowed to stop. This is where the CSP solution with cardinal payoffs is applied. Finally, if the vehicle does not stop in the Secretary Solution section, the vehicle will stop at the first gas station it sees in the Critical Stopping Section. 
 
 \section{Our Solution - TCP-inspired solution}
 {\color{red} In this section, you describe the TCP solution and write out the algorithm}
@@ -150,10 +156,10 @@ DevRTT = (1-\beta)\times DevRTT + \beta \times \mid SampleRTT - EstRTT \mid
 RTO = EstRTT + 4\times DevRTT
 \end{equation}
 
-\section{Our Solution - DM solution}
-{\color{red} In this section, you describe the DM solution and write out the algorithm}
+\section{Our Solution - Machine Learning}
+{\color{red} In this section, you describe the ML solution and write out the algorithm}
 
-
+\section{Our Solution - SGAS}
 In this section, we present our solution SGAS to the GAS problem. SGAS has two parts. The first part is to find the starting rule for the vehicle to start looking for the gas stations so that there is a maximum probability that the expected number of the gas stations ahead is $k$ before the vehicle runs out of gas. Once the first part can be decided, the second part is to use the optimal stopping rule of the CSP to let the vehicle stop at the gas station that has the best chance to offer the lowest gas price.
 
 As mentioned in the introduction section, our focus in this section is to find the starting rule. Since the starting rule is related to the distribution of the gas stations, we will discuss a practical distribution: the Poisson distribution in the following paragraphs.
@@ -250,7 +256,7 @@ Since the vehicle expects to compare prices from $k$ gas stations, the value $k$
 \end{equation}
 
 \subsection{Stopping Rule}
-Now that we have determined the starting point for the vehicle to start looking, we use the optimal stopping rule in \cite{Gilbert1966}. That is, passing by the first $\frac {k}{e}$ gas stations that are encountered and then stopping at the first gas station which offers a lower price than every gas station seen so far or continuing to the last gas station if this never occurs. In our context, we assume that the last gas station is the station where the vehicle has the warning light on.
+Now that we have determined the starting point for the vehicle to start looking, we use the optimal stopping rule in \cite{Gilbert1966}. That is, passing by the first $\sqrt{k}$ gas stations that are encountered and then stopping at the first gas station which offers a lower price than every gas station seen so far or continuing to the last gas station if this never occurs. In our context, we assume that the last gas station is the station where the vehicle has the warning light on.
 
 \subsection{SGAS Algorithm}
 
@@ -298,23 +304,6 @@ In this section, we evaluate the effectiveness of our solutions by comparing the
 {\color{red} percentage of running out of gas}
 
 If a vehicle decides to compare the prices from $k$ gas stations, we calculate the {\em success ratio} of the vehicle eventually adding gas at the gas station that offers the lowest price among the $k$ gas stations.
-
-{\color{red} starting point}
-
-\subsection{Synthetic Data}
-{\color{red} In this part, you conduct the simulations using the synthetic data}
-
-\subsubsection{Data Generation}
-
-We assume that the vehicle is driving on a highway with a length of $L$. For each unit length on the highway,  we rely on a random number generator to generate a number $x$ between $1$ and $100$. If $x \leq 100\lambda$, we set a gas station at that location. After this process, the density of gas stations along the highway is $\lambda$.
-
-We set the highway length $L$ to be $500$ miles.
-
-To estimate $\lambda$, the vehicle starts to count the number of gas stations every $d$ miles and estimate  density $\lambda$ using Equation (\ref{lambda}). We set $d$ from $50$ to $80$ miles with a step of $10$.
-
-We set the number of gas stations that a vehicle wants to compare $k$ to $5, 6$, and $8$.
-
-We randomly generate a gas price per gallon for each station with two digits after the decimal point from the range $[2, 4]$.
 
 \subsubsection{Setting}
 
