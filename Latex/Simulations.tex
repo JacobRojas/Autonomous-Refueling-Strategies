@@ -1,0 +1,17 @@
+\section{Simulations}
+In order to analyze the efficiency of our solution, we ran simulations on 151 routes. We define a route as all the gas stations along a path between two points in the United States that are between 300 and 500 miles apart.
+
+We use the metrics defined in the problem section of this paper to analyze the efficiency of our solution: the probability of running out of gas, the percentage of gas left in the tank when refueling, and the probability of getting cheap gas.
+
+Successfully getting cheap gas is defined as stopping at a gas station where the price is less than 80\% of all other gas stations along the route.
+
+In these simulations we set the critically low section to be the last 20\% of the route. We chose this number because it was a large enough section that the simulations never resulted in running out of gas.
+
+In Figure~\ref{fig:results} we see that the constant density approximation and the machine learning estimation both performed nearly as well as the perfect prediction of k. This shows that our solution is tolerant to small errors in the approximation of k. Because the optimal stopping point is given by $\sqrt{k}$, it makes sense that small errors in the estimation of k do not result in large changes to the stopping point.
+
+\begin{figure}
+\label{fig:results}
+\centering
+\includegraphics[width=0.48\textwidth]{results}
+\caption{Comparison of k-estimation strategies against perfect prediction, all run with 80\% being the start of the critically low section. We defined 'cheap gas' as any price that is lower than at least 80\% of all gas stations along the route.}
+\end{figure}
