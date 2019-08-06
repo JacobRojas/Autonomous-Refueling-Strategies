@@ -1,0 +1,25 @@
+\begin{figure}[!hbt]
+\vspace{0.2cm}
+\hrule \medskip \noindent {\bf Machine Learning Estimation: Second k-estimation method} \smallskip
+\hrule
+\smallskip
+\begin{algorithmic}[1]
+\STATE {\bf Inputs:} the total mileage $Total\_Mileage$ a vehicle can drive from a full tank until empty, the distance driven so far $Driven\_Mileage$, the length of the density observation section $Observation\_Length$, the machine learning model given by: $A$ a 1x11 vector, $b$ a scalar bias, $Avg$ a 1x11 vector of input averages, and $Dev$ a 1x11 vector of input standard deviations
+\STATE {\bf Output:} a number $k$ that is an approximation of the number of gas stations in the Secretary Problem Solution Section
+\STATE $segment\_length \gets Observation\_Length / 10$
+\FOR {segment $i$ = 1..10 in $Observation\_Length$}
+\STATE $gas\_stations[i] \gets $ number of gas stations passed in segment $i$
+\ENDFOR \\
+\STATE $Inputs \gets [gas\_stations[1],\ldots, gas\_stations[10], Total\_Mileage]$
+\FOR {$i$=1..11}
+\STATE $Standardized\_Inputs[i] \gets (Inputs[i] - Avg[i]) / Dev[i]$
+\ENDFOR
+\STATE $k \gets A * Standardized\_Inputs + b$ \label{alg:line:keq}
+\RETURN $k$
+\end{algorithmic}
+\hrule
+\caption{The general algorithm we used to estimate k with a given Machine Learning Model}
+\label{fig:ml-est}
+\end{figure}
+
+The general premise behind the Machine Learning k-estimation methods as shown in Figure~\ref{fig:ml-est} is to divide the Density Observation Section into ten segments to be used as input for the machine learning model. We decided to divide the Density Observation Section into segments so that the machine learning model would be able to account for the distribution of the gas stations along the highway. The 11th and last input into the model is the total distance the vehicle can drive, or the length of the route. To improve accuracy of the model, we standardized the inputs that we trained on. For this reason, the average and standard deviation of the test data must be included as a part of the given model. The inputs are then adjusted by the same average and standard deviation as the training data to produce the estimation for $k$.
