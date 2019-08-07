@@ -1,4 +1,4 @@
-close all
+%close all
 clear all
 
 %Switch the comments to switch between stopping point methods
@@ -29,12 +29,15 @@ for simNum = 1:numSim
         for i = 1:length(startSecretary)
             for j = 1:length(startCritical)
                 [rates(i, j, simNum), stops(i, j, simNum)] ...
-                    = SGAS5(highway, stoppingEq, alpha, beta,...
+                    = ML(highway, stoppingEq, alpha, beta,...
                     startSecretary(i), startCritical(j));
+%                 [rates(i, j, simNum), trash, stops(i, j, simNum)] ...
+%                     = SGAS4(highway, 9, stoppingEq, 2.5, alpha, beta);
                 if(rates(i, j, simNum) <= goal && rates(i, j, simNum) > 0)
                     successes = successes + 1;
                     %Graph success rate instead of gas rate
                     rates(i, j, simNum) = 1;
+                    disp(['Trip' mat2str(simNum) '.csv, ' mat2str(stops(i, j, simNum))])
                 elseif(rates(i, j, simNum) > 0)
                     rates(i, j, simNum) = 0;
                 end
@@ -60,37 +63,45 @@ for i = 1:length(startSecretary)
 end
 
 axisColor = 'black';
-stemColor = [1 0 0];
+lineStyle = ':ro';
 
-subplot(2, 3, 1);
-stem(startSecretary, mean(avgRate, 2), 'Color', stemColor);
-ylim([(min(mean(avgRate, 2))-0.05) (max(mean(avgRate, 2))+0.05)]);
-%xticks(alpha);
-ylabel("Success Rate");
-xlabel("Start of Secretary");
-%title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
-set(gca,'color','none')
-set(gca,'XColor',axisColor,'YColor',axisColor)
-
-subplot(2, 3, 2);
-stem(startSecretary, mean(avgRunOutOfGas, 2), 'Color', stemColor);
-ylim([0 max(mean(avgRunOutOfGas, 2))+0.05]);
-%xticks(alpha);
-ylabel("Rate Ran Out of Gas");
-xlabel("Start of Secretary");
-%title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
-set(gca,'color','none')
-set(gca,'XColor',axisColor,'YColor',axisColor)
+secretaryLabel = {"Start of Secretary Section";"(Faction of gas tank used)"};
 
 subplot(2, 3, 3);
-stem(startSecretary, mean(avgStop, 2), 'Color', stemColor);
-ylim([0.4 max(mean(avgStop, 2))+0.1]);
+plot(startSecretary, mean(avgRate, 2), lineStyle);
+%ylim([(min(mean(avgRate, 2))-0.05) (max(mean(avgRate, 2))+0.05)]);
+ylim([0.15 0.5])
 %xticks(alpha);
-ylabel("Fraction of Highway at Stop");
-xlabel("Start of Secretary");
+ylabel("Probability of getting cheap gas");
+xlabel(secretaryLabel);
 %title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
 set(gca,'color','none')
 set(gca,'XColor',axisColor,'YColor',axisColor)
+hold on
+
+subplot(2, 3, 1);
+plot(startSecretary, mean(avgRunOutOfGas, 2), lineStyle);
+%ylim([0 max(mean(avgRunOutOfGas, 2))+0.05]);
+ylim([0 0.03])
+%xticks(alpha);
+ylabel("Probability of running out of gas");
+xlabel(secretaryLabel);
+%title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
+set(gca,'color','none')
+set(gca,'XColor',axisColor,'YColor',axisColor)
+hold on
+
+subplot(2, 3, 2);
+plot(startSecretary, 1-mean(avgStop, 2), lineStyle);
+%ylim([0.4 max(mean(avgStop, 2))+0.1]);
+ylim([0.15 0.45])
+%xticks(alpha);
+ylabel("Percentage of gas left when refueling");
+xlabel(secretaryLabel);
+%title(sprintf("\\color{" + axisColor + "}k = %d", kValues(i)));
+set(gca,'color','none')
+set(gca,'XColor',axisColor,'YColor',axisColor)
+hold on
 
 subplot(2, 3, 4);
 stem(startCritical, mean(avgRate, 1), 'Color', [1 0 0]);
