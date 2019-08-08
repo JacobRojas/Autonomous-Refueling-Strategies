@@ -31,7 +31,7 @@ First run analyze.py to get lengths.csv. Then simply run `python label.py` to la
 ## plot.py
 Plots one (1) trip with the x-axis as the position along the highway and the y-axis being the price of gas. This helps me visualize what a Trip looks like. Usage: `python plot Trip32.csv`
 
-## his.py
+## hist.py
 Plots a histogram of gas prices for a Trip. This helps me see of the resulting gas price of a simulation run is a good price or not. Usage `python hist.py Trip20.csv`
 
 ## machinelearning.py
