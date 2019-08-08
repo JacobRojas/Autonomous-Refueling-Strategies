@@ -32,8 +32,8 @@ end
 
 if(stopCalc > 0); k = round((gasStations*(stopSecretary - stopCalc))/(stopCalc)); else; k = 1; end
 
+%Uncomment these two lines for perfect prediction
 %temp = highway(stopCalc:stopSecretary);
-%disp(k - length(temp(temp > 0)))
 %k = length(temp(temp > 0));
 
 stationsToPass = stoppingEq(k);

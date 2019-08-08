@@ -20,6 +20,7 @@ total = 0;
 rates(1:length(startSecretary), 1:length(startCritical), 1:numSim) = 10;
 stops(1:length(startSecretary), 1:length(startCritical), 1:numSim) = 10;
 for simNum = 1:numSim
+        %Change reallife to reallife_octave if running in octave
         highway = reallife(['Trip' mat2str(simNum) '.csv']);
         %highway = construct(0.2, 1000);
         
@@ -28,6 +29,7 @@ for simNum = 1:numSim
         
         for i = 1:length(startSecretary)
             for j = 1:length(startCritical)
+                %Change SGAS5 to ML or ML to SGAS5
                 [rates(i, j, simNum), stops(i, j, simNum)] ...
                     = ML(highway, stoppingEq, alpha, beta,...
                     startSecretary(i), startCritical(j));
@@ -63,7 +65,8 @@ for i = 1:length(startSecretary)
 end
 
 axisColor = 'black';
-lineStyle = ':ro';
+%':bo'=ML ':rs'=SGAS5 ':gx'=PerfectPrediction
+lineStyle = ':bo';
 
 secretaryLabel = {"Start of Secretary Section";"(Faction of gas tank used)"};
 
