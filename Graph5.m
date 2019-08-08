@@ -37,7 +37,7 @@ for simNum = 1:numSim
                     successes = successes + 1;
                     %Graph success rate instead of gas rate
                     rates(i, j, simNum) = 1;
-                    disp(['Trip' mat2str(simNum) '.csv, ' mat2str(stops(i, j, simNum))])
+                    %disp(['Trip' mat2str(simNum) '.csv, ' mat2str(stops(i, j, simNum))])
                 elseif(rates(i, j, simNum) > 0)
                     rates(i, j, simNum) = 0;
                 end
