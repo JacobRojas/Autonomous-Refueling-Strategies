@@ -1,17 +1,49 @@
-\section{Simulations}
-In order to analyze the efficiency of our solution, we ran simulations on 151 routes. We define a route as all the gas stations along a path between two points in the United States that are between 300 and 500 miles apart.
+In this section, we evaluate the effectiveness of our solutions by comparing them with the ground truth using a custom simulator written in MatLab.
 
-We use the metrics defined in the problem section of this paper to analyze the efficiency of our solution: the probability of running out of gas, the percentage of gas left in the tank when refueling, and the probability of getting cheap gas.
+\subsection{Data Collection}
+We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 meters away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. We used GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank on a one way trip. This effectively captures gas station information every 0.5 miles along a route. We selected routes in between 300 and 500 miles to represent how far a vehicle could drive on a full tank of gas. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 151 Routes across the United States to test our refueling algorithms. These routes were captured as matrices in Matlab with each index representing a unit distance and the element in each index being the price of gas at that location, a value of zero was used if no gas station was present. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain locations along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
+
+\subsection{Algorithms Compared}
+\begin{enumerate}
+\item Constant Density Approximation: Estimating k by assuming the density of the gas stations is nearly constant
+\item Machine Learning: Predicting k based on a model made with Machine Learning
+\item Ground Truth: The actual number of gas stations during the Secretary Problem Solution Section
+\end{enumerate}
+
+\subsection{Metrics}
+The quality of the three algorithms above is determined by the following three metrics:
+\begin{enumerate}
+\item The probability of running out of gas
+\item The percentage of the gas tank left when refueling
+\item The probability of getting cheap gas
+\end{enumerate}
 
 Successfully getting cheap gas is defined as stopping at a gas station where the price is less than 80\% of all other gas stations along the route.
 
-In these simulations we set the critically low section to be the last 20\% of the route. We chose this number because it was a large enough section that the simulations never resulted in running out of gas.
 
-In Figure~\ref{fig:results} we see that the constant density approximation and the machine learning estimation both performed nearly as well as the perfect prediction of k. This shows that our solution is tolerant to small errors in the approximation of k. Because the optimal stopping point is given by $\sqrt{k}$, it makes sense that small errors in the estimation of k do not result in large changes to the stopping point.
+\subsection{Setting}
+
+In these simulations we set the critically low section to be the last 20\% of the route in Figure~\ref{fig:results80} and the last 15\% in Figure~\ref{fig:results85}. By running the simulations at these two similar stopping points, the impact of starting the critically low section later becomes evident.
+
+Each data point on the graph is an average of all 151 simulation runs on each of the routes collected from GasBuddy.com.
+
+
+\subsection{Results}
+
+In Figures \ref{fig:results80} and \ref{fig:results85} we see that the constant density approximation and the machine learning estimation both performed nearly as well as the perfect prediction of k. This shows that our solution is tolerant to small errors in the approximation of k. Because the optimal stopping point is given by $\sqrt{k}$, it makes sense that small errors in the estimation of k do not result in large changes to the stopping point.
 
 \begin{figure}
-\label{fig:results}
 \centering
-\includegraphics[width=0.48\textwidth]{results}
-\caption{Comparison of k-estimation strategies against perfect prediction, all run with 80\% being the start of the critically low section. We defined 'cheap gas' as any price that is lower than at least 80\% of all gas stations along the route.}
+\textbf{Critically Low Section: Last 20\%}\par\medskip
+\includegraphics[width=0.48\textwidth]{results80}
+\caption{Comparison of k-estimation strategies against perfect prediction, all run with the last 20\% being the critically low section. We defined 'cheap gas' as any price that is lower than at least 80\% of all gas stations along the route.}
+\label{fig:results80}
+\end{figure}
+
+\begin{figure}
+\centering
+\textbf{Critically Low Section: Last 15\%}\par\medskip
+\includegraphics[width=0.48\textwidth]{results85}
+\caption{Comparison of k-estimation strategies against perfect prediction, all run with the last 15\% being the critically low section. We defined 'cheap gas' as any price that is lower than at least 80\% of all gas stations along the route.}
+\label{fig:results85}
 \end{figure}

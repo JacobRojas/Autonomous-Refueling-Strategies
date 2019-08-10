@@ -83,13 +83,15 @@ The differences of our work from others and the key contributions of our work ar
 \item We demonstrate the effectiveness of our schemes analytically and experimentally by simulations.
 \end{itemize}
 
-The rest of the paper is organized as follows: Section \ref{related} references the related works;  Section \ref{problem} defines the problem;  Section \ref{solution} presents our solution;  Section \ref{analysis} gives mathematical analyzes of our solution;  Section \ref{simulations} shows the simulations; and Section \ref{conclusion} is the conclusion.
+The rest of the paper is organized as follows: Section \ref{sec:related} references the related works;  Section \ref{sec:problem} defines the problem;  Section \ref{sec:solution} presents our solution; 
+%Section \ref{sec:analysis} gives mathematical analyzes of our solution;  
+Section \ref{sec:simulations} shows the simulations; and Section \ref{sec:conclusion} is the conclusion.
 
 
 
-\section{Related Works} \label{related}
+\section{Related Works} \label{sec:related}
 \subsection{Classic Secretary Problem}
-In the classic secretary problem (CSP) \cite{CSP}, a DM wants to hire the best secretary out of $n$ rankable applicants for a position. The applicants are interviewed one by one in a random order.  When the DM interviews the $j$th applicant in the sequence, she gains information sufficient to rank the applicant among all applicants interviewed so far, but is unaware of the quality of yet unseen applicants.   Her objective is to find an optimal strategy or the stopping rule to maximize the probability of selecting the best applicant. The CSP can be formally stated below:
+In the classic secretary problem (CSP) \cite{CSP}, a decision maker (DM) wants to hire the best secretary out of $n$ rankable applicants for a position. The applicants are interviewed one by one in a random order.  When the DM interviews the $j$th applicant in the sequence, she gains information sufficient to rank the applicant among all applicants interviewed so far, but is unaware of the quality of yet unseen applicants.   Her objective is to find an optimal strategy or the stopping rule to maximize the probability of selecting the best applicant. The CSP can be formally stated below:
 
 \begin{enumerate}
 \item  There is a fixed and known number $n$ of applicants who can be ranked from the best $1$ to the worst $n$ without a tie competing for a single position.
@@ -107,12 +109,9 @@ $t^{*} = \min \{t \geq 1: \sum_{k=t+1}^{n} \frac{1}{k-1} \leq 1\} $
 The cutoff $t^{*}$ converges to $\frac {n}{e}$, where $e$ is the base of the natural logarithm, and the optimal policy selects the best applicant with probability $\frac {1} {e} \approx 0.3679$ as $n \rightarrow \infty$. Both $t^{*}$ and the selection probability converge from above. When $n=10, t^{*}=4$ and the best applicant is selected with probability $0.4583$?. Already at $n=20, t^{*}=8$ and the probability of success is $0.3842$. At $n=100, t^{*}=37$ and the success probability is $0.3710$. A historical review of the CSP can be found in Ferguson \cite{Ferguson1989} and in Samuels \cite{Samuels1992}. Depending on the context, the problem is sometimes referred to by other names such as the ``Sultan’s dowry" problem).
 
 \subsection{Secretary Problem with Cardinal Payoffs}
-{\color{red} Expand on this, reduce CSP explanation}
-Using the classic secretary problem rewards a payoff of 1 for selecting the applicant with the absolute rank of 1 out of $n$ applicants. In the case of stopping for gas, we believe that a driver should be rewarded for stopping at a location which saves money, not only rewarded if the gas station is the lowest of $n$ stations. Using a variation of the classic secretary problem with cardinal payoff, the stopping point moves from $\frac{n}{e}$ to $\sqrt{n}$ \cite{ferenstein:hal-00602313}.
+Using the classic secretary problem rewards a payoff of 1 for selecting the applicant with the absolute rank of 1 out of $n$ applicants. In the case of stopping for gas, we believe that a driver should be rewarded for stopping at a location which saves money, not only rewarded if the gas station is the lowest of $n$ stations. The measurable, varying rewards for selecting each option are called cardinal payoffs. Using a variation of the classic secretary problem with cardinal payoffs, the optimal stopping point moves from $\frac{n}{e}$ to $\sqrt{n}$ as $n \rightarrow \infty$ \cite{ferenstein:hal-00602313}.
 
-\section{Problem Statement} \label{problem}
-{\color{red} Change this part saying that our goal is to satisfy three conditions:
-1. Not to run out of gas 2. Not to start too early 3. Price as low as possible }
+\section{Problem Statement} \label{sec:problem}
 
 In this section, we define the problem we want to solve. We assume in a smart city, self-driving vehicles need to find the best strategy to add gas. A self-driving vehicle is driving on the highway. When it comes close to a gas station, the OBU in the vehicle and the RSU at the gas station can communicate with each other and the gas price at the gas station can be transmitted to the vehicle. When the vehicle gets the price, it learns the price of the gas station relative to those previously seen. The vehicle expects to compare at most $k$ gas stations from the time it wants to add gas to the time it runs out of gas. The objective of the vehicle is to select the gas station which offers the lowest price over all those have been seen and those not-yet-seen before it runs out of gas. We call this problem the gas-adding-strategy (GAS) problem. The conditions in this problem can be formally stated as follows:
 
@@ -123,7 +122,7 @@ In this section, we define the problem we want to solve. We assume in a smart ci
 \item Once the vehicle passes a gas station, it cannot later come back. If it reaches the point of running out of gas, the vehicle must add gas.
 \end{enumerate}
 
-In order to assess the quality of our solution, we set three metrics and ordered them by importance. With a good solution, the vehicle should:
+In order to assess the quality of our solution, we set three metrics and ordered them by importance. With a good solution, the vehicle should: \label{metrics}
 
 \begin{enumerate}
 \item Nearly never run out of gas
@@ -133,47 +132,23 @@ In order to assess the quality of our solution, we set three metrics and ordered
 
 These metrics were chosen and given their respective priorities because this is generally how people decide whether to stop for gas. For example, most people will not stop for gas when they have 80\% of a tank left, even if they see a very low gas price. We want our solution to reflect this general order of priorities.
 
-\section{Our Solution - Critical Sections}
-{\color{red} need new name to replace 'Critical Sections'}
-{\color{red} need graphic showing critical sections}
-Based on optimizing the metrics laid out in the previous section, we designed a framework called Critical Sections. This framework divides a highway into three sections:
-\begin{enumerate}
-    \item Density Approximation
-    \item Secretary Solution
-    \item Critical Stopping 
-\end{enumerate}
-The Density Approximation section is used to predict the number of gas stations, $k$, we expect to see in the second section. As the car drives along the highway it collects data that is used as input in either the Constant Density Approximation or machine learning model. The Secretary Solution section is the first section in which a vehicle is allowed to stop. This is where the CSP solution with cardinal payoffs is applied. Finally, if the vehicle does not stop in the Secretary Solution section, the vehicle will stop at the first gas station it sees in the Critical Stopping Section. 
+\section{Our Solution - Highway Division} \label{sec:solution}
 
-\subsection{Our Solution - Machine Learning}
-{\color{red} In this section, you describe the ML solution and write out the algorithm}
+\input{CriticalSectionsAlg.tex}
 
-\section{Simulations} \label{simulations}
-In this section, we evaluate the effectiveness of our solutions by comparing them with the ground truth using a custom simulator written in ....
 
-\subsection{Data Collection}
-We explored several methods of retrieving real life gas station data. In order to accurately represent a given length of highway, the location and rates of gas stations which are no more than 300 m away from the path a vehicle would travel need to be recorded. First, manual collection was done by using GasBuddy, a website which displays gas station locations and prices based on location or along a given route. We used GasBuddy’s Plan Your Trip option with mile per gallon settings to 0.5 and a 1 gallon tank on a one way trip. This effectively captures gas station information every 0.5 miles along a route. We selected routes in between 300 and 500 miles to represent how far a vehicle could drive on a full tank of gas. After setting these configurations, a route is calculated and station information is displayed to the browser. We used a Python script which utilizes Beautiful Soup, a library for web scraping, to pull gas station rates and locations. With this data, we modeled 151 Routes across the United States to test our refueling algorithms. These routes were captured as matrices in Matlab with each index representing a unit distance and the element in each index being the price of gas at that location, a value of zero was used if no gas station was present. It should be noted that GasBuddy routes do no perfectly capture the frequency of gas stations along every route. We found that certain locations along our generated routes would show no stations when in reality there were plenty. Because we found no suitable alternative, we accept our routes are more conservative than reality.
+\subsection{Constant Density Approximation Method of Estimating $k$}
+\input{ConstDensityApproxAlg.tex}
 
-\subsection{Algorithms Compared}
-\begin{enumerate}
-\item {\em The TPC solution} (..): our proposed TPC solution to the GAS problem.
-\item {\em The DM algorithm} (DM):  ...
-\item {\em Ground truth}: ...
-\end{enumerate}
+\subsection{Machine Learning Method of Estimating $k$}
+\input{MachineLearningAlg.tex}
 
-\subsection{Metric}
-{\color{red} percentage of running out of gas}
+\section{Simulations} \label{sec:simulations}
 
-If a vehicle decides to compare the prices from $k$ gas stations, we calculate the {\em success ratio} of the vehicle eventually adding gas at the gas station that offers the lowest price among the $k$ gas stations.
+\input{Simulations.tex}
 
-\subsubsection{Setting}
 
-\subsubsection{Results}
-You present the simulation results for the above three parameters using the three algorithms and the synthetic data. You analyze the data and draw conclusions. 
-
-\subsubsection{Results}
-{\color{red} You present the simulation results for the above three parameters using the three algorithms and the real data. You analyze the data and draw conclusions.}
-
-\section{Conclusion} \label{conclusion}
+\section{Conclusion} \label{sec:conclusion}
 
 \bibliographystyle{plain}
 \bibliography{vehref}

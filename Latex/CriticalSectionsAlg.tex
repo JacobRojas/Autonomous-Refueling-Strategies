@@ -5,11 +5,13 @@
 \smallskip
 \begin{algorithmic}[1]
 \STATE {\bf Inputs:} the total mileage $Total\_Mileage$ a vehicle can drive from a full tank until empty, the distance driven so far $Driven\_Mileage$, the length of the density observation section $Observation\_Length$, the length of the Secretary Solution section $Secretary\_Length$
-\STATE {\bf Output:} the gas station $j$ where the vehicle stops for gas
-\WHILE {$Driven\_Mileage < Observation\_Length$}
-\STATE Keep driving and observe the location of the gas stations in order to predict $k$ ($k$ will be predicted using either the algorithm in Figure~\ref{fig:tcp-est} or Figure~\ref{ml-est})
-\ENDWHILE \\
-$gas\_stations\_passed \gets 0$
+\STATE {\bf Output:} the gas station $j$ where the vehicle stops for gas 
+\COMMENT {Start of Density Observation Section}
+\WHILE {$Driven\_Mileage < Observation\_Length$} \label{alg:line:observation-start}
+\STATE Keep driving and observe the location of the gas stations in order to predict $k$ ($k$ will be predicted using either the algorithm in Figure~\ref{fig:tcp-est} or Figure~\ref{fig:ml-est})
+\ENDWHILE \label{alg:line:observation-end} \\
+\COMMENT {Start of Secretary Problem Solution Section}
+\STATE $gas\_stations\_passed \gets 0$ \label{alg:line:secretary-start}
 \WHILE {$Driven\_Mileage < (Secretary\_Length + Observation\_Length)$ $\AND$ $gas\_stations\_passed < \sqrt{k}$}
 \STATE Keep driving and for every gas station that you pass, record the price of the gas station and increment $gas\_stations\_passed$ by one
 \ENDWHILE
@@ -18,17 +20,18 @@ $gas\_stations\_passed \gets 0$
 \IF {Gas Station $j$ is cheaper than all $gas\_stations\_passed$ gas stations' prices}
 \STATE Stop and return gas station $j$
 \ELSE
-\STATE Keep driving and stop at the next gas station
+\STATE Keep driving
 \ENDIF
-\ENDWHILE
-\WHILE {$Driven\_Mileage < Total\_Mileage$}
+\ENDWHILE \label{alg:line:secretary-end} \\
+\COMMENT {Start of Critically Low Section}
+\WHILE {$Driven\_Mileage < Total\_Mileage$} \label{alg:line:critical-start}
 \STATE Keep driving until you hit a gas station $j$
 \STATE Stop and return gas station $j$
-\ENDWHILE
+\ENDWHILE \label{alg:line:critical-end}
 \STATE If you reach this point without returning a gas station $j$, then you have run out of gas
 \end{algorithmic}
 \hrule
-\caption{Our solution to the GAS problem}
+\caption{Our framework solution to the GAS problem which divides the highway into three sections.}
 \label{fig:CriticalSectionsAlg}
 \end{figure}
 
@@ -39,8 +42,8 @@ In Figure~\ref{fig:CriticalSectionsAlg} we describe our general solution to the 
 \item Critically Low Section
 \end{enumerate}
 
-In the first section, the density observation section, we will simply watch the frequency and distribution of gas stations that we pass. This information will later be used to estimate the total number of gas stations, $k$, that the vehicle will pass in the next section.
+In the first section, the density observation section found on lines \ref{alg:line:observation-start} through \ref{alg:line:observation-end}, we will simply watch the frequency and distribution of gas stations that we pass. This information will later be used to estimate the total number of gas stations, $k$, that the vehicle will pass in the next section. This estimation is done with either the Constant Density Approximation (Figure~\ref{fig:tcp-est}) or the Machine Learning Model (Figure~\ref{fig:ml-est}).
 
-In the next section, the secretary problem solution section, we first pass $\sqrt{k}$ gas stations and record their prices. After we have passed $\sqrt{k}$ gas stations, we will then stop at the first gas station with a price lower than all $\sqrt{k}$ gas stations that we passed.
+In the next section, the secretary problem solution section found on lines \ref{alg:line:secretary-start} through \ref{alg:line:secretary-end}, we first pass $\sqrt{k}$ gas stations based on the estimation made earlier and record the gas station prices. After we have passed $\sqrt{k}$ gas stations, we will then stop at the first gas station with a price lower than all $\sqrt{k}$ gas stations that we passed.
 
-If we reach the last section, the critically low section, without stopping at a gas station, then we will stop at the first gas station that we pass in this critically low section.
+Finally, if the vehicle does not stop in the Secretary Solution section, the vehicle is considered to be critically low on gas and will stop at the first gas station it sees in the Critically Low Section found on lines \ref{alg:line:critical-start} through \ref{alg:line:critical-end}. 

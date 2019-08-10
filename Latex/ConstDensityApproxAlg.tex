@@ -1,21 +1,21 @@
 \begin{figure}[!hbt]
 \vspace{0.2cm}
-\hrule \medskip \noindent {\bf Constant Density Approximation: First k-estimation method } \smallskip
+\hrule \medskip \noindent {\bf Constant Density Approximation} \smallskip
 \hrule
 \smallskip
 \begin{algorithmic}[1]
 \STATE {\bf Inputs:} the distance driven so far $Driven\_Mileage$, the length of the density observation section $Observation\_Length$, the length of the Secretary Solution section $Secretary\_Length$
 \STATE {\bf Output:} a number $k$ that is an approximation of the number of gas stations in the Secretary Problem Solution Section
-$gas\_stations\_passed \gets 0$
+\STATE $gas\_stations\_passed \gets 0$
 \WHILE {$Driven\_Mileage < Observation\_Length$}
 \STATE Drive to next gas station
 \STATE $gas\_stations\_passed \gets gas\_stations\_passed + 1$
 \ENDWHILE \\
-\STATE $k \gets (gas\_stations\_passed) * (Secretary\_Length) / (Observation\_Length)$ \label{alg:line:keq}
+\STATE $k \gets (gas\_stations\_passed)~*~(Secretary\_Length)$ $/$ $(Observation\_Length)$ \label{alg:line:keq}
 \RETURN $k$
 \end{algorithmic}
 \hrule
-\caption{Our solution to the GAS problem}
+\caption{The first method of predicting the $k$ gas stations in the Secretary Solution Section of the highway by assuming a constant average density of gas stations on the highway.}
 \label{fig:tcp-est}
 \end{figure}
 
